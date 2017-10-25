@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKSeparator.m,v 1.3 1998/08/09 14:38:01 helge Exp $
+// $Id: GTKSeparator.m,v 1.5 1998/08/16 14:03:44 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKSeparator.h"
+#import "GTKBox.h"
 
 @implementation GTKSeparator
 

@@ -1,9 +1,13 @@
-# $Id: README,v 1.12 1998/08/10 01:14:27 helge Exp $
+# $Id: README,v 1.15 1998/08/16 14:59:18 helge Exp $
 
 GTKKit-050898-release
 
 [News]
 
+08/16/1998: Started Calculator, a very simple demo program to get people started.
+            Fixed up include files in GTKKit.
+08/15/1998: Made menus more GTKContainer like (fixed method names)
+            Changed OBJECT tag to REFERENCE tag.
 08/10/1998: The description-language is getting running. In GkmParse and GkmTest
             are examples. You can use an XML like description file to build up
             gtk+ interfaces. It is based on pccts (see www.antlr.org).
@@ -117,6 +121,7 @@ to do little bugfixes.
 Greetings
   Helge
 
+--
 Helge Hess <helge@mdlink.de>
 MDlink online service center GmbH (http://www.mdlink.de/)
 Magdeburg, Germany

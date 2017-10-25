@@ -17,9 +17,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKOptionMenu.m,v 1.2 1998/07/10 10:57:44 helge Exp $
+// $Id: GTKOptionMenu.m,v 1.3 1998/08/16 13:59:11 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKOptionMenu.h"
 
 @implementation GTKOptionMenu

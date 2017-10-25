@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKScrolledWindow.m,v 1.2 1998/07/10 10:57:45 helge Exp $
+// $Id: GTKScrolledWindow.m,v 1.4 1998/08/16 14:03:43 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKScrolledWindow.h"
+#import "GTKAdjustment.h"
 
 @implementation GTKScrolledWindow
 
@@ -35,10 +36,10 @@
 + (id)scrolledWindowWithContent:(GTKWidget *)_content {
   GTKScrolledWindow *widget = [[self alloc] init];
   [widget addSubWidget:_content];
-  return [widget autorelease];
+  return AUTORELEASE(widget);
 }
 + (id)scrolledWindowWithAdjustment:(GTKAdjustment *)_h:(GTKAdjustment *)_v {
-  return [[[self alloc] initWithAdjustment:_h:_v] autorelease];
+  return AUTORELEASE([[self alloc] initWithAdjustment:_h:_v]);
 }
 
 - (id)init {
@@ -46,8 +47,8 @@
 }
 - (id)initWithGtkObject:(GtkObject *)_obj {
   if ((self = [super initWithGtkObject:_obj])) {
-    [[self horizontalAdjustment] retain];
-    [[self verticalAdjustment]   retain];
+    RETAIN([self horizontalAdjustment]);
+    RETAIN([self verticalAdjustment]);
   }
   return self;
 }
@@ -63,8 +64,8 @@
     GTKAdjustment *horiz = [self horizontalAdjustment];
     GTKAdjustment *vert  = [self verticalAdjustment];
 
-    [horiz release]; horiz = nil;
-    [vert  release]; vert  = nil;
+    RELEASE(horiz); horiz = nil;
+    RELEASE(vert);  vert  = nil;
   }
   [super dealloc];
 }

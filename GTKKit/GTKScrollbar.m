@@ -1,4 +1,4 @@
-// $Id: GTKScrollbar.m,v 1.2 1998/08/09 14:38:00 helge Exp $
+// $Id: GTKScrollbar.m,v 1.4 1998/08/16 14:03:42 helge Exp $
 
 /*
    GTKScrollbar.m
@@ -24,8 +24,9 @@
    or in connection with the use or performance of this software.
 */
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKScrollbar.h"
+#import "GTKAdjustment.h"
 
 @implementation GTKScrollbar
 

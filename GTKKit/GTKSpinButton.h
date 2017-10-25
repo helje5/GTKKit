@@ -17,10 +17,10 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKSpinButton.h,v 1.6 1998/07/14 13:40:31 helge Exp $
+// $Id: GTKSpinButton.h,v 1.7 1998/08/16 14:03:46 helge Exp $
 
 #include <gtk/gtkspinbutton.h>
-#import <GTKKit/GTKRange.h>
+#import <GTKKit/GTKEntry.h>
 
 @interface GTKSpinButton : GTKEntry
 {

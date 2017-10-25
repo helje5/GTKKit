@@ -23,8 +23,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKFrame.m,v 1.2 1998/07/10 10:57:38 helge Exp $
+// $Id: GTKFrame.m,v 1.3 1998/08/16 13:49:00 helge Exp $
 
+#import "common.h"
 #import "GTKFrame.h"
 
 @implementation GTKFrame
@@ -64,6 +65,17 @@
 }
 + (guint)typeIdentifier {
   return gtk_frame_get_type();
+}
+
+// description
+
+- (NSString *)description {
+  return [NSString stringWithFormat:
+                     @"<%s[0x%08X] %@ title=%@ mask=%@ %@>",
+                     [[self class] name], gtkObject,
+                     [self frameDescription],
+                     [self title]
+                   ];
 }
 
 @end

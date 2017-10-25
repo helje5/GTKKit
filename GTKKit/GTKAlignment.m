@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKAlignment.m,v 1.1 1998/07/14 12:23:52 helge Exp $
+// $Id: GTKAlignment.m,v 1.2 1998/08/16 13:59:07 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKAlignment.h"
 
 @implementation GTKAlignment

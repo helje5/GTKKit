@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModuleParser.h,v 1.9 1998/08/10 00:36:51 helge Exp $
+// $Id: GKModuleParser.h,v 1.10 1998/08/15 14:51:46 helge Exp $
 
 #import <Foundation/NSObject.h>
 
@@ -31,6 +31,7 @@
 @class GKMAttribute;
 
 typedef enum {
+  GKM_Reference,
   GKM_Object,
   GKM_Generic
 } GKMElementType;
@@ -73,6 +74,8 @@ typedef enum {
 
 - (void)beginObjectElement;
 - (void)endObjectElement;
+- (void)beginReferenceElement;
+- (void)endReferenceElement;
 - (void)applyAssignment:(GKMAttribute *)_name
   assign:(id)_value to:(GKMAttribute *)_property;
 

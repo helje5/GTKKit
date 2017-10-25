@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenuItem.m,v 1.5 1998/08/05 19:08:58 helge Exp $
+// $Id: GTKMenuItem.m,v 1.6 1998/08/15 14:14:10 helge Exp $
 
 #import "common.h"
 #import "GTKMenuItem.h"
+#import "GTKMenu.h"
 
 @implementation GTKMenuItem
 
@@ -44,15 +45,28 @@
   return [self initWithGtkObject:obj];
 }
 
+#if !LIB_FOUNDATION_BOEHM_GC
 - (void)dealloc {
   [self setTarget:nil];
   [self setSubMenu:nil];
   [super dealloc];
 }
+#endif
 
 - (void)loadGtkObject {
   [super loadGtkObject];
   [self addSelfAsObserverForSignal:@"activate"];
+}
+
+// showing & hiding
+
+- (void)showAll {
+  [subMenu showAll];
+  [super showAll];
+}
+- (void)hideAll {
+  [super hideAll];
+  [subMenu hideAll];
 }
 
 // properties
@@ -120,25 +134,27 @@
 
 // subitems
 
-- (void)setSubMenu:(GTKWidget *)_submenu {
-  GTKWidget *oldSubMenu = [self subMenu];
-  
-  if (_submenu == oldSubMenu) return;
+- (void)setSubMenu:(GTKMenu *)_submenu {
+  if (_submenu == self->subMenu)
+    return;
   
   if (_submenu) {
-    [self setSubMenu:nil];
-    gtk_menu_item_set_submenu((GtkMenuItem *)gtkObject, [_submenu gtkWidget]);
-    [_submenu retain];
+    RELEASE(self->subMenu); self->subMenu = nil;
+    
+    if (gtkObject)
+      gtk_menu_item_set_submenu((GtkMenuItem *)gtkObject, [_submenu gtkWidget]);
+    self->subMenu = RETAIN(_submenu);
   }
   else {
-    if (oldSubMenu) {
-      gtk_menu_item_remove_submenu((GtkMenuItem *)gtkObject);
-      [oldSubMenu release]; oldSubMenu = nil;
+    if (self->subMenu) {
+      if (gtkObject)
+        gtk_menu_item_remove_submenu((GtkMenuItem *)gtkObject);
+      RELEASE(self->subMenu); self->subMenu = nil;
     }
   }
 }
 - (GTKWidget *)subMenu {
-  return (GTKWidget *)GTKGetObject(((GtkMenuItem *)gtkObject)->submenu);
+  return self->subMenu;
 }
 
 // actions

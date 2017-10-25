@@ -15,9 +15,11 @@ extern GKModuleParser *activeParser;
 
 #token "<\!\-\-"                      << zzmode(COMMENT); zzskip(); >>
 
-#token BEGIN_OBJECT_TAG "<OBJECT"     << zzmode(TAG); >>
-#token BEGIN_ASSIGN_TAG "<ASSIGN"     << zzmode(TAG); >>
-#token OBJECT_CLOSETAG  "</OBJECT\>"
+#token BEGIN_OBJECT_TAG    "<OBJECT"     << zzmode(TAG); >>
+#token BEGIN_REFERENCE_TAG "<REFERENCE"  << zzmode(TAG); >>
+#token BEGIN_ASSIGN_TAG    "<ASSIGN"     << zzmode(TAG); >>
+#token OBJECT_CLOSETAG     "</OBJECT[\ \t]*\>"
+#token REFERENCE_CLOSETAG  "</REFERENCE[\ \t]*\>"
 
 #token BEGIN_CLOSETAG   "</"          << zzmode(TAG); >>
 #token BEGIN_TAG        "<"           << zzmode(TAG); >>
@@ -103,7 +105,7 @@ element
 
 topLevelElement
   : element
-  | objectElement
+  | referenceElement
   ;
 
 assignElement
@@ -116,15 +118,15 @@ assignElement
     << [activeParser applyAssignment:$at assign:value to:$i]; >>
   ;
 
-objectElement
+referenceElement
   : << 
       NSDictionary *al = nil;
     >>
-    BEGIN_OBJECT_TAG     << [activeParser beginObjectElement]; >>
+    BEGIN_REFERENCE_TAG     << [activeParser beginReferenceElement]; >>
     attributeList
     END_TAG
     ( assignElement )*
-    OBJECT_CLOSETAG      << [activeParser endObjectElement];   >>
+    REFERENCE_CLOSETAG      << [activeParser endReferenceElement];   >>
   ;
 
 genericElement
@@ -136,6 +138,7 @@ genericElement
     | END_TAG
       << [activeParser beginGenericElementContent:$bi]; >>
       ( element
+      | assignElement
       )*
       << [activeParser endGenericElementContent:$bi]; >>
       BEGIN_CLOSETAG 

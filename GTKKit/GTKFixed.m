@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKFixed.m,v 1.5 1998/08/09 10:56:09 helge Exp $
+// $Id: GTKFixed.m,v 1.6 1998/08/16 13:49:00 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKFixed.h"
 
 @implementation GTKFixedLayoutInfo

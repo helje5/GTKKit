@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenu.m,v 1.2 1998/07/10 10:57:42 helge Exp $
+// $Id: GTKMenu.m,v 1.5 1998/08/16 13:59:09 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKMenu.h"
 
 @implementation GTKMenu
@@ -34,6 +34,35 @@
 }
 - (id)init {
   return [self initWithGtkObject:(GtkObject *)gtk_menu_new()];
+}
+
+// children
+
+- (void)addSubWidget:(GTKWidget *)_widget {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_widget,           @"sub widget is nil");
+
+  gtk_menu_append((GtkMenu *)gtkObject, [_widget gtkWidget]);
+  [self _primaryAddSubWidget:_widget];
+}
+- (void)addSubWidget:(GTKWidget *)_widget atIndex:(int)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_widget,           @"sub widget is nil");
+
+  if (_idx == 0)
+    gtk_menu_prepend((GtkMenu *)gtkObject, [_widget gtkWidget]);
+  else
+    gtk_menu_insert((GtkMenu *)gtkObject, [_widget gtkWidget], _idx);
+  [self _primaryInsertSubWidget:_widget atIndex:_idx];
+}
+
+// showing & hiding
+
+- (void)show {
+  // menu's are never shown
+}
+- (void)hide {
+  // .. and hidden
 }
 
 // private

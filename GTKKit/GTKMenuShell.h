@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenuShell.h,v 1.1 1998/07/09 06:07:31 helge Exp $
+// $Id: GTKMenuShell.h,v 1.2 1998/08/15 13:54:35 helge Exp $
 
 #include <gtk/gtkmenushell.h>
 #import <GTKKit/GTKContainer.h>
@@ -33,9 +33,8 @@
 
 // modifying
 
-- (void)appendWidget:(GTKWidget *)_entry;
-- (void)prependWidget:(GTKWidget *)_entry;
-- (void)insertWidget:(GTKWidget *)_entry atIndex:(gint)_idx;
+- (void)addSubWidget:(GTKWidget *)_widget;
+- (void)addSubWidget:(GTKWidget *)_widget atIndex:(int)_idx;
 
 // operations
 

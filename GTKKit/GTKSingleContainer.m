@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKSingleContainer.m,v 1.1 1998/07/09 06:07:40 helge Exp $
+// $Id: GTKSingleContainer.m,v 1.2 1998/08/16 13:59:15 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKSingleContainer.h"
 
 @implementation GTKSingleContainer

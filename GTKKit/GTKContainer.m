@@ -22,17 +22,19 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKContainer.m,v 1.9 1998/08/05 13:42:01 helge Exp $
+// $Id: GTKContainer.m,v 1.11 1998/08/16 13:59:08 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKContainer.h"
 
 @implementation GTKContainer
 
+#if !LIB_FOUNDATION_LIBRARY
 - (void)dealloc {
-  [subWidgets release]; subWidgets = nil;
+  RELEASE(subWidgets); subWidgets = nil;
   [super dealloc];
 }
+#endif
 
 // init
 
@@ -80,7 +82,7 @@ static GTKSignalMapEntry sigs[] = {
 
 - (void)addSubWidget:(GTKWidget *)_widget {
   NSAssert(gtkObject != NULL, @"gtk widget is null");
-  NSAssert(_widget, @"sub widget is nil");
+  NSAssert(_widget,           @"sub widget is nil");
   
   gtk_container_add(GTK_CONTAINER(gtkObject), [_widget gtkWidget]);
   [self _primaryAddSubWidget:_widget];

@@ -17,9 +17,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKGammaCurve.m,v 1.2 1998/07/10 10:57:38 helge Exp $
+// $Id: GTKGammaCurve.m,v 1.3 1998/08/16 13:49:00 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKGammaCurve.h"
 
 @implementation GTKGammaCurve

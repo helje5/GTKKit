@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKNotebook.m,v 1.2 1998/07/10 10:57:43 helge Exp $
+// $Id: GTKNotebook.m,v 1.4 1998/08/16 14:01:07 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKNotebook.h"
+#import "GTKLabel.h"
 
 @implementation GTKNotebook
 

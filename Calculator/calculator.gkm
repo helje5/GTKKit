@@ -1,0 +1,122 @@
+<!--
+   calculator.gkm
+
+   Copyright (C) 1998 Helge Hess.
+   All rights reserved.
+
+   Author: Helge Hess <helge@mdlink.de>
+
+   This file is part of GTKKit.
+
+   Permission to use, copy, modify, and distribute this software and its
+   documentation for any purpose and without fee is hereby granted, provided
+   that the above copyright notice appear in all copies and that both that
+   copyright notice and this permission notice appear in supporting
+   documentation.
+
+   We disclaim all warranties with regard to this software, including all
+   implied warranties of merchantability and fitness, in no event shall
+   we be liable for any special, indirect or consequential damages or any
+   damages whatsoever resulting from loss of use, data or profits, whether in
+   an action of contract, negligence or other tortious action, arising out of
+   or in connection with the use or performance of this software.
+-->
+<!-- $Id: calculator.gkm,v 1.1 1998/08/16 14:58:10 helge Exp $ -->
+
+<MODULE>
+
+  <Controller ID=ctrl> <!-- instantiates controller and sets controller outlets -->
+    <ASSIGN window  = #main/>
+    <ASSIGN display = #display/>
+  </Controller>
+
+  <GTKMenu ID=fileMenu>
+    <GTKMenuItem><GTKLabel xAlignment=0 title="Info..."/></GTKMenuItem>
+
+    <GTKMenuItem/> <!-- an empty item works as a seperator-line -->
+
+    <GTKMenuItem target=#APP action=@terminate:>
+      <GTKLabel xAlignment=0 title="Quit"/>
+    </GTKMenuItem>
+  </GTKMenu>
+
+  <GTKWindow ID=main title="Calculator" borderWidth=0 SIZE=[200 200]>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+      <GTKMenuBar layout=[Box expand=NO]>
+        <GTKMenuItem subMenu=#fileMenu><GTKLabel title="File"/></GTKMenuItem>
+      </GTKMenuBar>
+
+      <GTKEntry ID=display intValue=0 editable=NO/>
+
+      <GTKTable rowCount=4 columnCount=4 isHomogeneous=YES borderWidth=5
+                rowSpacings=1 columnSpacings=1>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=1 layout=[Table x=0 top=0]>
+          <GTKLabel title="1"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=2 layout=[Table x=1 y=0]>
+          <GTKLabel title="2"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=3 layout=[Table x=2 y=0]>
+          <GTKLabel title="3"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=4 layout=[Table x=0 y=1]>
+          <GTKLabel title="4"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=5 layout=[Table x=1 y=1]>
+          <GTKLabel title="5"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=6 layout=[Table x=2 y=1]>
+          <GTKLabel title="6"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=7 layout=[Table x=0 y=2]>
+          <GTKLabel title="7"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=8 layout=[Table x=1 y=2]>
+          <GTKLabel title="8"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=9 layout=[Table x=2 y=2]>
+          <GTKLabel title="9"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=0 layout=[Table x=0 y=3]>
+          <GTKLabel title="0"/>
+        </GTKButton>
+
+        <GTKButton action=@digitPressed: target=#ctrl tag=10 layout=[Table x=1 y=3]>
+          <GTKLabel title=","/>
+        </GTKButton>
+
+        <GTKButton action=@operate: target=#ctrl layout=[Table x=2 y=3] tag=0>
+          <GTKLabel title="="/>
+        </GTKButton>
+
+        <GTKButton action=@operate: target=#ctrl layout=[Table x=3 y=0] tag=1>
+          <GTKLabel title="+"/>
+        </GTKButton>
+
+        <GTKButton action=@operate: target=#ctrl layout=[Table x=3 y=1] tag=2>
+          <GTKLabel title="-"/>
+        </GTKButton>
+
+        <GTKButton action=@operate: target=#ctrl layout=[Table x=3 y=2] tag=3>
+          <GTKLabel title="*"/>
+        </GTKButton>
+
+        <GTKButton action=@operate: target=#ctrl layout=[Table x=3 y=3] tag=4>
+          <GTKLabel title="/"/>
+        </GTKButton>
+
+      </GTKTable>
+    </GTKVertBox>
+  </GTKWindow>
+
+</MODULE>

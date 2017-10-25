@@ -1,4 +1,4 @@
-// $Id: GTKMiscWidget.h,v 1.1 1998/07/09 06:07:32 helge Exp $
+// $Id: GTKMiscWidget.h,v 1.2 1998/08/15 14:44:23 helge Exp $
 
 /*
    GTKMiscWidget.h
@@ -41,9 +41,21 @@
 - (void)setPadding:(gint)_xPad:(gint)_yPad;
 - (void)getPadding:(gint *)_xPad:(gint *)_yPad;
 
+// convenience accessors
+
+- (void)setXAlignment:(float)_xAlign;
+- (void)setYAlignment:(float)_yAlign;
+- (float)xAlignment;
+- (float)yAlignment;
+
 // private
 
 - (GtkMisc *)gtkMisc;
 + (guint)typeIdentifier;
+
+// description
+
+- (NSString *)alignDescription;
+- (NSString *)description;
 
 @end

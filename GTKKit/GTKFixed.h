@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKFixed.h,v 1.2 1998/07/13 12:11:31 helge Exp $
+// $Id: GTKFixed.h,v 1.3 1998/08/16 13:48:59 helge Exp $
 
 #include <gtk/gtkfixed.h>
 #import <GTKKit/GTKContainer.h>
+#import <GTKKit/GTKLayoutInfo.h>
 
 @interface GTKFixedLayoutInfo : GTKLayoutInfo
 {

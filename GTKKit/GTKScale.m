@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKScale.m,v 1.2 1998/08/09 14:34:24 helge Exp $
+// $Id: GTKScale.m,v 1.4 1998/08/16 14:03:41 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKScale.h"
+#import "GTKAdjustment.h"
 
 @implementation GTKScale
 

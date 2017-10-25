@@ -1,4 +1,4 @@
-// $Id: GTKMenuWindow.m,v 1.1 1998/07/09 06:07:32 helge Exp $
+// $Id: GTKMenuWindow.m,v 1.2 1998/08/16 13:59:10 helge Exp $
 
 /*
    GTKWindow.m
@@ -24,7 +24,7 @@
    or in connection with the use or performance of this software.
 */
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKMenuWindow.h"
 
 @implementation GTKMenuWindow

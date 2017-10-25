@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKSpinButton.m,v 1.10 1998/08/10 02:24:06 helge Exp $
+// $Id: GTKSpinButton.m,v 1.11 1998/08/16 13:59:15 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKSpinButton.h"
 
 @implementation GTKSpinButton

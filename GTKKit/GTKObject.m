@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKObject.m,v 1.9 1998/07/13 10:55:32 helge Exp $
+// $Id: GTKObject.m,v 1.11 1998/08/16 14:21:52 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKObject.h"
 #import "GTKUtilities.h"
 
@@ -56,6 +56,12 @@ NSMapTable *signalToSelector = NULL;
                                         NSIntMapValueCallBacks,
                                         256);
   }
+}
+
+- (id)init {
+  NSLog(@"don't call init from GTKObject, "
+        @"initWithGtkObject: is the designated initializer, aborting.");
+  abort();
 }
 
 - (id)initWithGtkObject:(GtkObject *)_object {

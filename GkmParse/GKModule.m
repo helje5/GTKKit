@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModule.m,v 1.14 1998/08/10 01:13:38 helge Exp $
+// $Id: GKModule.m,v 1.15 1998/08/16 14:58:12 helge Exp $
 
 #include <ctype.h>
 #include <objc/objc-api.h>
@@ -156,14 +156,23 @@
   return [GTKBoxLayoutInfo layoutWithPadding:padding doExpand:expand doFill:fill];
 }
 - (id)produceTableLayoutWithValues:(NSDictionary *)_values {
-  int le, te, re, be;
+  if ([_values objectForKey:@"x"]) { // just a cell
+    int x, y;
+    x = [[_values objectForKey:@"x"] intValue];
+    y = [[_values objectForKey:@"y"] intValue];
 
-  le = [[_values objectForKey:@"left"]   intValue];
-  te = [[_values objectForKey:@"top"]    intValue];
-  re = [[_values objectForKey:@"right"]  intValue];
-  be = [[_values objectForKey:@"bottom"] intValue];
+    return [GTKTableLayoutInfo cellAt:x:y];
+  }
+  else { // complete description
+    int le, te, re, be;
 
-  return [GTKTableLayoutInfo cellFrom:le:te to:re:be];
+    le = [[_values objectForKey:@"left"]   intValue];
+    te = [[_values objectForKey:@"top"]    intValue];
+    re = [[_values objectForKey:@"right"]  intValue];
+    be = [[_values objectForKey:@"bottom"] intValue];
+
+    return [GTKTableLayoutInfo cellFrom:le:te to:re:be];
+  }
 }
 
 - (NSInvocation *)invocationToSetValue:(id)_value

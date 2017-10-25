@@ -12,32 +12,34 @@
 #define TOK_BEGIN_MODULE 2
 #define TOK_END_MODULE 3
 #define BEGIN_OBJECT_TAG 5
-#define BEGIN_ASSIGN_TAG 6
-#define OBJECT_CLOSETAG 7
-#define BEGIN_CLOSETAG 8
-#define BEGIN_TAG 9
-#define END_EMPTY_TAG 15
-#define END_TAG 16
-#define ATTRKEY_ID 17
-#define ATTRKEY_GROUP 18
-#define ATTRKEY_POSITION 19
-#define ATTRKEY_SIZE 20
-#define ATTRVALUE_NO 21
-#define ATTRVALUE_YES 22
-#define ATTRVALUE_AUTOMATIC 23
-#define ATTRVALUE_ALWAYS 24
-#define BEGIN_LAYOUT 25
-#define TOK_ASSIGN 26
-#define STRING 27
-#define INTEGER 28
-#define FLOAT 29
-#define ID_REFERENCE 30
-#define SELECTOR 31
-#define IDENTIFIER 32
-#define END_LAYOUT 35
-#define LAYOUT_FIXED 36
-#define LAYOUT_BOX 37
-#define LAYOUT_TABLE 38
+#define BEGIN_REFERENCE_TAG 6
+#define BEGIN_ASSIGN_TAG 7
+#define OBJECT_CLOSETAG 8
+#define REFERENCE_CLOSETAG 9
+#define BEGIN_CLOSETAG 10
+#define BEGIN_TAG 11
+#define END_EMPTY_TAG 17
+#define END_TAG 18
+#define ATTRKEY_ID 19
+#define ATTRKEY_GROUP 20
+#define ATTRKEY_POSITION 21
+#define ATTRKEY_SIZE 22
+#define ATTRVALUE_NO 23
+#define ATTRVALUE_YES 24
+#define ATTRVALUE_AUTOMATIC 25
+#define ATTRVALUE_ALWAYS 26
+#define BEGIN_LAYOUT 27
+#define TOK_ASSIGN 28
+#define STRING 29
+#define INTEGER 30
+#define FLOAT 31
+#define ID_REFERENCE 32
+#define SELECTOR 33
+#define IDENTIFIER 34
+#define END_LAYOUT 37
+#define LAYOUT_FIXED 38
+#define LAYOUT_BOX 39
+#define LAYOUT_TABLE 40
 
 #ifdef __USE_PROTOS
 void gkmodule(void);
@@ -64,9 +66,9 @@ extern void assignElement();
 #endif
 
 #ifdef __USE_PROTOS
-void objectElement(void);
+void referenceElement(void);
 #else
-extern void objectElement();
+extern void referenceElement();
 #endif
 
 #ifdef __USE_PROTOS
@@ -103,10 +105,10 @@ extern  id   layoutValue();
 extern SetWordType zzerr1[];
 extern SetWordType zzerr2[];
 extern SetWordType zzerr3[];
+extern SetWordType setwd1[];
 extern SetWordType zzerr4[];
 extern SetWordType zzerr5[];
 extern SetWordType zzerr6[];
-extern SetWordType setwd1[];
 extern SetWordType zzerr7[];
 extern SetWordType zzerr8[];
 extern SetWordType setwd2[];

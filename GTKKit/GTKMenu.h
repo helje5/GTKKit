@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenu.h,v 1.1 1998/07/09 06:07:29 helge Exp $
+// $Id: GTKMenu.h,v 1.2 1998/08/15 13:54:34 helge Exp $
 
 #include <gtk/gtkmenu.h>
 #import <GTKKit/GTKMenuShell.h>
@@ -33,6 +33,11 @@
 
 + (id)menu;
 - (id)init;
+
+// children
+
+- (void)addSubWidget:(GTKWidget *)_widget;
+- (void)addSubWidget:(GTKWidget *)_widget atIndex:(int)_idx;
 
 // private
 

@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKDialog.m,v 1.2 1998/07/10 10:57:36 helge Exp $
+// $Id: GTKDialog.m,v 1.4 1998/08/16 14:01:06 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKDialog.h"
+#import "GTKBox.h"
 
 @implementation GTKDialog
 

@@ -1,4 +1,4 @@
-// $Id: GTKPixmap.h,v 1.1 1998/07/09 06:07:35 helge Exp $
+// $Id: GTKPixmap.h,v 1.2 1998/08/16 13:49:02 helge Exp $
 
 /*
    GTKPixmap.h
@@ -27,9 +27,23 @@
 #include <gtk/gtkpixmap.h>
 #import <GTKKit/GTKMiscWidget.h>
 
+@class GDKPixmap;
+
 @interface GTKPixmap : GTKMiscWidget
 {
+  GDKPixmap *image;
+  GDKPixmap *mask;
 }
+
++ (id)pixmapWithImage:(GDKPixmap *)_pixmap mask:(GDKPixmap *)_mask;
+- (id)initWithImage:(GDKPixmap *)_image mask:(GDKPixmap *)_mask;
+
+// accessors
+
+- (void)setImage:(GDKPixmap *)_pixmap;
+- (GDKPixmap *)image;
+- (void)setMask:(GDKPixmap *)_pixmap;
+- (GDKPixmap *)mask;
 
 // private
 

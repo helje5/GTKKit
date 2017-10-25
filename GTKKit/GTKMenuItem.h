@@ -22,16 +22,29 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenuItem.h,v 1.1 1998/07/09 06:07:30 helge Exp $
+// $Id: GTKMenuItem.h,v 1.3 1998/08/15 14:51:19 helge Exp $
 
 #include <gtk/gtkmenuitem.h>
 #import <GTKKit/GTKItem.h>
 #import <GTKKit/GTKControl.h>
 
+@class GTKMenu;
+
+/*
+  This represents a menu item. The subwidgets of an item are the widgets which
+  are displayed as the name of the item.
+  To add sub-items to an item you have to create an GTKMenu object and then
+  attach this menu to the item by calling setSubMenu:.
+
+  A separator (a line which splits menugroups) can be created by creating an empty
+  menu item.
+*/
+
 @interface GTKMenuItem : GTKItem < GTKControl >
 {
-  id  target;
-  SEL action;
+  id      target;
+  SEL     action;
+  GTKMenu *subMenu;
 }
 
 + (id)menuItem;
@@ -50,8 +63,8 @@
 
 // submenus
 
-- (void)setSubMenu:(GTKWidget *)_submenu;
-- (GTKWidget *)subMenu;
+- (void)setSubMenu:(GTKMenu *)_submenu;
+- (GTKMenu *)subMenu;
 
 // actions
 

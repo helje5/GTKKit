@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKProgressBar.m,v 1.3 1998/08/05 13:48:15 helge Exp $
+// $Id: GTKProgressBar.m,v 1.4 1998/08/16 13:59:12 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKProgressBar.h"
 
 @implementation GTKProgressBar

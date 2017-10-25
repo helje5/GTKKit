@@ -1,0 +1,19 @@
+# $Id: README,v 1.1 1998/08/16 14:58:10 helge Exp $
+
+This directory contains calculator. It's a very simple calculator, not bug-free or
+complete in any way ..
+It is there to show how to get things done in GTKKit.
+
+It shows some issues:
+
+  - how to use gkm GUI description files
+    - how to setup menues
+    - how to use target/action and tags with buttons
+    - how to instantiate own controller classes and assign outlets from them
+  - how to use table-layout
+  - how to register for a launch-notification to show up windows
+
+--
+Helge Hess <helge@mdlink.de>
+MDlink online service center GmbH (http://www.mdlink.de/)
+Magdeburg, Germany

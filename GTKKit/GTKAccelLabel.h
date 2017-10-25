@@ -1,5 +1,5 @@
 /*
-   GTKMenuBar.h
+   GTKAccelLabel.h
 
    Copyright (C) 1998 Helge Hess.
    All rights reserved.
@@ -22,26 +22,27 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenuBar.h,v 1.2 1998/08/15 13:54:34 helge Exp $
+// $Id: GTKAccelLabel.h,v 1.1 1998/08/15 14:44:21 helge Exp $
 
-#include <gtk/gtkmenubar.h>
-#import <GTKKit/GTKMenuShell.h>
+#include <gtk/gtkaccellabel.h>
+#import <GTKKit/GTKLabel.h>
 
-@interface GTKMenuBar : GTKMenuShell
+@interface GTKAccelLabel : GTKLabel
 {
 }
 
-+ (id)menubar;
-- (id)init;
+// properties
 
-// modifying
+- (void)setAcceleratorWidget:(GTKWidget *)_widget;
+- (guint)acceleratorWidth;
 
-- (void)addSubWidget:(GTKWidget *)_widget;
-- (void)addSubWidget:(GTKWidget *)_widget atIndex:(int)_idx;
+// operation
+
+- (void)refetch:(id)_sender;
 
 // private
 
-- (GtkMenuBar *)gtkMenuBar;
+- (GtkAccelLabel *)gtkAccelLabel;
 + (guint)typeIdentifier;
 
 @end

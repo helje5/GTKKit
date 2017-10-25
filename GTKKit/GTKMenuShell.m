@@ -22,32 +22,34 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenuShell.m,v 1.1 1998/07/09 06:07:31 helge Exp $
+// $Id: GTKMenuShell.m,v 1.5 1998/08/16 14:01:07 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKMenuShell.h"
+#import "GTKMenuItem.h"
 
 @implementation GTKMenuShell
 
 // modifying
 
-- (void)appendWidget:(GTKWidget *)_entry {
-  gtk_menu_shell_append((GtkMenuShell *)gtkObject,
-                        [_entry gtkWidget]);
-  [self _primaryAddSubWidget:_entry];
-}
+- (void)addSubWidget:(GTKWidget *)_widget {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_widget,           @"sub widget is nil");
+  NSAssert([_widget isKindOfClass:[GTKMenuItem class]], @"arg is not a menu item");
 
-- (void)prependWidget:(GTKWidget *)_entry {
-  gtk_menu_shell_prepend((GtkMenuShell *)gtkObject,
-                         [_entry gtkWidget]);
-  [self _primaryInsertSubWidget:_entry atIndex:0];
+  gtk_menu_shell_append((GtkMenuShell *)gtkObject, [_widget gtkWidget]);
+  [self _primaryAddSubWidget:_widget];
 }
+- (void)addSubWidget:(GTKWidget *)_widget atIndex:(int)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_widget,           @"sub widget is nil");
+  NSAssert([_widget isKindOfClass:[GTKMenuItem class]], @"arg is not a menu item");
 
-- (void)insertWidget:(GTKWidget *)_entry atIndex:(gint)_idx {
-  gtk_menu_shell_insert((GtkMenuShell *)gtkObject,
-                        [_entry gtkWidget],
-                        _idx);
-  [self _primaryInsertSubWidget:_entry atIndex:_idx];
+  if (_idx == 0)
+    gtk_menu_shell_prepend((GtkMenuShell *)gtkObject, [_widget gtkWidget]);
+  else
+    gtk_menu_shell_insert((GtkMenuShell *)gtkObject, [_widget gtkWidget], _idx);
+  [self _primaryInsertSubWidget:_widget atIndex:_idx];
 }
 
 // operations

@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKKit.h,v 1.15 1998/08/09 14:38:00 helge Exp $
+// $Id: GTKKit.h,v 1.16 1998/08/15 14:44:22 helge Exp $
 
 // #import <Foundation/Foundation.h>
 
@@ -38,6 +38,7 @@
 #import <GTKKit/GTKControl.h>
 #import <GTKKit/GTKTableDataSource.h>
 
+#import <GTKKit/GTKAccelLabel.h>
 #import <GTKKit/GTKAdjustment.h>
 #import <GTKKit/GTKAlignment.h>
 #import <GTKKit/GTKBox.h>
@@ -91,66 +92,67 @@
 #define LINK_GTKKit \
   static void __link_GTKKit(void) {\
     ;\
-    [GTKAdjustment      class]; \
-    [GTKAlignment       class]; \
-    [GTKBox             class]; \
-    [GTKBoxLayoutInfo   class]; \
-    [GTKButton          class]; \
-    [GTKCheckButton     class]; \
-    [GTKContainer       class]; \
-    [GTKData            class]; \
-    [GTKDialog          class]; \
-    [GTKEditable        class]; \
-    [GTKEntry           class]; \
-    [GTKFileSelection   class]; \
-    [GTKFixed           class]; \
-    [GTKFixedLayoutInfo class]; \
-    [GTKFrame           class]; \
-    [GTKHorizBox        class]; \
-    [GTKHorizPaned      class]; \
-    [GTKHorizScale      class]; \
-    [GTKHorizScrollbar  class]; \
-    [GTKHorizSeparator  class]; \
-    [GTKItem            class]; \
-    [GTKLabel           class]; \
-    [GTKList            class]; \
-    [GTKListItem        class]; \
-    [GTKMenu            class]; \
-    [GTKMenuBar         class]; \
-    [GTKMenuItem        class]; \
-    [GTKMenuShell       class]; \
-    [GTKMenuWindow      class]; \
-    [GTKMiscWidget      class]; \
-    [GTKNotebook        class]; \
-    [GTKObject          class]; \
-    [GTKPaned           class]; \
-    [GTKPixmap          class]; \
-    [GTKProgressBar     class]; \
-    [GTKRadioButton     class]; \
-    [GTKRange           class]; \
-    [GTKScale           class]; \
-    [GTKScrollbar       class]; \
-    [GTKScrolledWindow  class]; \
-    [GTKSeparator       class]; \
-    [GTKSignalEvent     class]; \
-    [GTKSingleContainer class]; \
-    [GTKSpinButton      class]; \
-    [GTKTable           class]; \
-    [GTKTableLayoutInfo class]; \
-    [GTKTableList       class]; \
-    [GTKText            class]; \
-    [GTKToggleButton    class]; \
-    [GTKToolTips        class]; \
-    [GTKToolbar         class]; \
-    [GTKTree            class]; \
-    [GTKTreeItem        class]; \
-    [GTKVertBox         class]; \
-    [GTKVertPaned       class]; \
-    [GTKVertScale       class]; \
-    [GTKVertScrollbar   class]; \
-    [GTKVertSeparator   class]; \
-    [GTKWidget          class]; \
-    [GTKWindow          class]; \
+    [GTKAccelLabel      self]; \
+    [GTKAdjustment      self]; \
+    [GTKAlignment       self]; \
+    [GTKBox             self]; \
+    [GTKBoxLayoutInfo   self]; \
+    [GTKButton          self]; \
+    [GTKCheckButton     self]; \
+    [GTKContainer       self]; \
+    [GTKData            self]; \
+    [GTKDialog          self]; \
+    [GTKEditable        self]; \
+    [GTKEntry           self]; \
+    [GTKFileSelection   self]; \
+    [GTKFixed           self]; \
+    [GTKFixedLayoutInfo self]; \
+    [GTKFrame           self]; \
+    [GTKHorizBox        self]; \
+    [GTKHorizPaned      self]; \
+    [GTKHorizScale      self]; \
+    [GTKHorizScrollbar  self]; \
+    [GTKHorizSeparator  self]; \
+    [GTKItem            self]; \
+    [GTKLabel           self]; \
+    [GTKList            self]; \
+    [GTKListItem        self]; \
+    [GTKMenu            self]; \
+    [GTKMenuBar         self]; \
+    [GTKMenuItem        self]; \
+    [GTKMenuShell       self]; \
+    [GTKMenuWindow      self]; \
+    [GTKMiscWidget      self]; \
+    [GTKNotebook        self]; \
+    [GTKObject          self]; \
+    [GTKPaned           self]; \
+    [GTKPixmap          self]; \
+    [GTKProgressBar     self]; \
+    [GTKRadioButton     self]; \
+    [GTKRange           self]; \
+    [GTKScale           self]; \
+    [GTKScrollbar       self]; \
+    [GTKScrolledWindow  self]; \
+    [GTKSeparator       self]; \
+    [GTKSignalEvent     self]; \
+    [GTKSingleContainer self]; \
+    [GTKSpinButton      self]; \
+    [GTKTable           self]; \
+    [GTKTableLayoutInfo self]; \
+    [GTKTableList       self]; \
+    [GTKText            self]; \
+    [GTKToggleButton    self]; \
+    [GTKToolTips        self]; \
+    [GTKToolbar         self]; \
+    [GTKTree            self]; \
+    [GTKTreeItem        self]; \
+    [GTKVertBox         self]; \
+    [GTKVertPaned       self]; \
+    [GTKVertScale       self]; \
+    [GTKVertScrollbar   self]; \
+    [GTKVertSeparator   self]; \
+    [GTKWidget          self]; \
+    [GTKWindow          self]; \
     \
     __link_NSObjectTakeValues(); \
     __link_GTKKit(); \

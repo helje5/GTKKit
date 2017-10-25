@@ -22,10 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKTable.h,v 1.4 1998/08/09 23:37:55 helge Exp $
+// $Id: GTKTable.h,v 1.6 1998/08/16 13:59:15 helge Exp $
 
 #include <gtk/gtktable.h>
 #import <GTKKit/GTKContainer.h>
+#import <GTKKit/GTKLayoutInfo.h>
 
 /*
   The rows and columnts are laid out starting with 0 to n, where n was the
@@ -79,6 +80,7 @@
 }
 
 + (id)cellFrom:(int)_left:(int)_top to:(int)_right:(int)_bottom;
++ (id)cellAt:(int)_x:(int)_y;
 
 - (gint)left;
 - (gint)top;

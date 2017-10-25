@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKTable.m,v 1.5 1998/08/09 23:37:55 helge Exp $
+// $Id: GTKTable.m,v 1.6 1998/08/16 13:49:03 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKTable.h"
 
 @implementation GTKTableLayoutInfo
@@ -49,6 +49,12 @@
 + (id)cellFrom:(int)_left:(int)_top to:(int)_right:(int)_bottom {
   return AUTORELEASE([[self alloc]
                             initWithCoverage:_left:_top:_right:_bottom
+                            options:(GTK_EXPAND | GTK_FILL):(GTK_EXPAND | GTK_FILL)
+                            padding:0:0]);
+}
++ (id)cellAt:(int)_x:(int)_y {
+  return AUTORELEASE([[self alloc]
+                            initWithCoverage:_x:_y:(_x + 1):(_y + 1)
                             options:(GTK_EXPAND | GTK_FILL):(GTK_EXPAND | GTK_FILL)
                             padding:0:0]);
 }

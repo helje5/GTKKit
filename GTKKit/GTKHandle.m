@@ -17,9 +17,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKHandle.m,v 1.3 1998/07/13 10:55:32 helge Exp $
+// $Id: GTKHandle.m,v 1.4 1998/08/16 13:49:01 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKHandle.h"
 
 

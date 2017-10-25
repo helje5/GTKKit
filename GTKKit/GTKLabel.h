@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKLabel.h,v 1.4 1998/07/14 13:30:16 helge Exp $
+// $Id: GTKLabel.h,v 1.5 1998/08/15 14:44:22 helge Exp $
 
 #include <gtk/gtklabel.h>
 #import <GTKKit/GTKMiscWidget.h>
@@ -34,7 +34,7 @@
 + (id)labelWithTitle:(NSString *)_title;
 + (id)labelWithTitle:(NSString *)_title justification:(GtkJustification)_mode;
 + (id)labelWithTitle:(NSString *)_title alignment:(gfloat)_xAlign:(gfloat)_yAlign;
-- (id)initWithTitle:(NSString *)_title;
+- (id)initWithTitle:(NSString *)_title; // designated initializer
 
 // accessors
 

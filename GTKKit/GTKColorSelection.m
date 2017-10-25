@@ -17,9 +17,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKColorSelection.m,v 1.8 1998/08/10 02:24:06 helge Exp $
+// $Id: GTKColorSelection.m,v 1.9 1998/08/16 13:59:08 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKColorSelection.h"
 
 @implementation GTKColorSelection

@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKLabel.m,v 1.8 1998/07/14 13:30:17 helge Exp $
+// $Id: GTKLabel.m,v 1.10 1998/08/16 13:49:02 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKLabel.h"
 
 @implementation GTKLabel
@@ -112,10 +112,13 @@
 
 - (NSString *)description {
   return [NSString stringWithFormat:
-                     @"<%s[0x%08X] %@ title='%@' justification=%@>",
+                     @"<%s[0x%08X] %@ title='%@' justification=%@ %@>",
                      [[self class] name], gtkObject,
-                     [self frameDescription], [self title],
-                     GTKJustificationDescription([self justification])];
+                     [self frameDescription],
+                     [self title],
+                     GTKJustificationDescription([self justification]),
+                     [self alignDescription]
+                   ];
 }
 
 @end

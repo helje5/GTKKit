@@ -1,4 +1,4 @@
-// $Id: GTKPixmap.m,v 1.1 1998/07/09 06:07:35 helge Exp $
+// $Id: GTKPixmap.m,v 1.3 1998/08/16 13:59:12 helge Exp $
 
 /*
    GTKPixmap.m
@@ -24,10 +24,53 @@
    or in connection with the use or performance of this software.
 */
 
-#import "GTKKit.h"
+#import "common.h"
+#import <GDKKit/GDKPixmap.h>
 #import "GTKPixmap.h"
 
 @implementation GTKPixmap
+
++ (id)pixmapWithImage:(GDKPixmap *)_pixmap mask:(GDKPixmap *)_mask {
+  return AUTORELEASE([[self alloc] initWithImage:_pixmap mask:_mask]);
+}
+
+- (id)init {
+  return [self initWithImage:nil mask:nil];
+}
+- (id)initWithImage:(GDKPixmap *)_image mask:(GDKPixmap *)_mask {
+  return [self initWithGtkObject:(GtkObject *)gtk_pixmap_new([_image gdkPixmap],
+                                                             [_mask  gdkPixmap])];
+}
+
+#if !LIB_FOUNDATION_LIBRARY
+- (void)dealloc {
+  RELEASE(self->image); self->image = nil;
+  RELEASE(self->mask);  self->mask  = nil;
+  [super dealloc];
+}
+#endif
+
+// accessors
+
+- (void)setImage:(GDKPixmap *)_pixmap {
+  ASSIGN(self->image, _pixmap);
+  
+  gtk_pixmap_set((GtkPixmap *)gtkObject,
+                 [_pixmap gdkPixmap], [self->mask gdkPixmap]);
+}
+- (GDKPixmap *)image {
+  return self->image;
+}
+
+- (void)setMask:(GDKPixmap *)_pixmap {
+  ASSIGN(self->mask, _pixmap);
+  
+  gtk_pixmap_set((GtkPixmap *)gtkObject,
+                 [self->image gdkPixmap], [_pixmap gdkPixmap]);
+}
+- (GDKPixmap *)mask {
+  return self->mask;
+}
 
 // private
 
@@ -36,6 +79,18 @@
 }
 + (guint)typeIdentifier {
   return gtk_pixmap_get_type();
+}
+
+// description
+
+- (NSString *)description {
+  return [NSString stringWithFormat:
+                     @"<%s[0x%08X] %@ image=%@ mask=%@ %@>",
+                     [[self class] name], gtkObject,
+                     [self frameDescription],
+                     [self image], [self mask],
+                     [self alignDescription]
+                   ];
 }
 
 @end

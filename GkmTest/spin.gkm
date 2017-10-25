@@ -21,15 +21,15 @@
    an action of contract, negligence or other tortious action, arising out of
    or in connection with the use or performance of this software.
  -->
-<!-- $Id: spin.gkm,v 1.4 1998/08/10 02:24:08 helge Exp $ -->
+<!-- $Id: spin.gkm,v 1.5 1998/08/15 13:44:51 helge Exp $ -->
 
 
 <MODULE>
 
   <!-- setup outlets in spin button controller -->
-  <OBJECT ID=OWNER>
+  <REFERENCE ID=OWNER>
     <ASSIGN window=#spin/>
-  </OBJECT>
+  </REFERENCE>
 
   <!-- create spinbutton test window -->
   <GTKWindow ID=spin title="Spin Buttons" releasedWhenClosed=NO borderWidth=0

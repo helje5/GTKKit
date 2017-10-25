@@ -21,7 +21,7 @@
    an action of contract, negligence or other tortious action, arising out of
    or in connection with the use or performance of this software.
  -->
-<!-- $Id: test.gkm,v 1.9 1998/08/10 01:58:53 helge Exp $ -->
+<!-- $Id: test.gkm,v 1.12 1998/08/15 14:51:51 helge Exp $ -->
 
 <!--
   Some little XML like format to create GTKKit GUIs ..
@@ -47,18 +47,18 @@
   In general a tagged description of a gtk+ widget hierachy works quite fine, since
   the widgets are responsible for the layout. This is much like HTML.
 
-  The attributes of the tags directly refer to set-methods of the widgets. The element
-  names are the widget class names. The ID attribute assigns a name to a widget, objects
-  which were registered using this can be referenced using the #-attribute values, like
-  #MyObject. Those references are resolved after the whole file is parsed, so you can
-  reference objects which come after the reference.
+  The attributes of the tags directly refer to set-methods of the widgets. The 
+  element names are the widget class names. The ID attribute assigns a name to a
+  widget, objects which were registered using this can be referenced using the 
+  #-attribute values, like #MyObject. Those references are resolved after the whole 
+  file is parsed, so you can reference objects which come after the reference.
   
   A special attribute-value GROUP exists to support groups of objects. It's main
   purpose is to serve radio-button groups. Every object which belongs to a group is
-  tagged by the GROUP attribute. All widgets with the same GROUP attribute go into the
-  same radio group. Those groupings are resolved after the whole file was parsed.
+  tagged by the GROUP attribute. All widgets with the same GROUP attribute go into 
+  the same radio group. Those groupings are resolved after the whole file was parsed.
 
-  There is a special tag OBJECT which can be used to refer to objects which were
+  There is a special tag REFERENCE which can be used to refer to objects which were
   created outside the file. This is usually a controller object. Using the object
   tag you can assign the controller references to widgets. This is roughly the same
   as IB outlets. To assign a value to a property of the object use the ASSIGN tag.
@@ -72,22 +72,41 @@
 <MODULE>
 
   <!-- setup outlets in main controller -->
-  <OBJECT ID=OWNER>
+  <REFERENCE ID=OWNER>
     <ASSIGN menuWindow   = #menu/>
     <ASSIGN buttons      = #buttons/>
     <ASSIGN fixedButtons = #fixedButtons/>
     <ASSIGN checkButtons = #checkButtons/>
-  </OBJECT>
+  </REFERENCE>
+
+  <GTKMenu ID=fileMenu>
+    <GTKMenuItem><GTKLabel xAlignment=0 title="Open..."/>   </GTKMenuItem>
+    <GTKMenuItem><GTKLabel xAlignment=0 title="Save"/>      </GTKMenuItem>
+    <GTKMenuItem><GTKLabel xAlignment=0 title="Save as..."/></GTKMenuItem>
+
+    <GTKMenuItem/>
+
+    <GTKMenuItem target=#APP action=@terminate:>
+      <GTKLabel xAlignment=0 title="Quit"/>
+    </GTKMenuItem>
+  </GTKMenu>
 
   <!-- the menu -->
   <GTKWindow ID=menu title="ObjC gtk+ test" borderWidth=0 defaultWidget=#quitButton
              POSITION=[140 120] SIZE=[200 300]>
     <GTKVertBox spacing=0 isHomogeneous=NO>
+      <GTKMenuBar layout=[Box expand=NO]>
+        <GTKMenuItem subMenu=#fileMenu>
+          <GTKLabel title="File"/>
+        </GTKMenuItem>
+      </GTKMenuBar>
+
       <GTKScrolledWindow borderWidth=10 
                          horizScrollbarPolicy=AUTOMATIC 
                          vertScrollbarPolicy=AUTOMATIC>
         <GTKVertBox spacing=0 isHomogeneous=NO>
           <!-- menu buttons -->
+          <GTKLabel title="Menu" layout=[Box expand=NO fill=NO]/>
 
           <GTKButton target=#buttons action=@orderFront: layout=[Box expand=NO fill=NO]>
             <GTKLabel title="buttons"/>

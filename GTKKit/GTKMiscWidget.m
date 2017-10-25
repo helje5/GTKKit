@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMiscWidget.m,v 1.1 1998/07/09 06:07:32 helge Exp $
+// $Id: GTKMiscWidget.m,v 1.4 1998/08/16 13:59:10 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKMiscWidget.h"
 
 @implementation GTKMiscWidget
@@ -32,19 +32,52 @@
 // accessors
 
 - (void)setAlignment:(gfloat)_xAlign:(gfloat)_yAlign {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  
   gtk_misc_set_alignment((GtkMisc *)gtkObject, _xAlign, _yAlign);
 }
 - (void)getAlignment:(gfloat *)_xAlign:(gfloat *)_yAlign {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  
   *_xAlign = ((GtkMisc *)gtkObject)->xalign;
   *_yAlign = ((GtkMisc *)gtkObject)->yalign;
 }
 
 - (void)setPadding:(gint)_xPad:(gint)_yPad {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  
   gtk_misc_set_padding((GtkMisc *)gtkObject, _xPad, _yPad);
 }
 - (void)getPadding:(gint *)_xPad:(gint *)_yPad {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  
   *_xPad = ((GtkMisc *)gtkObject)->xpad;
   *_yPad = ((GtkMisc *)gtkObject)->ypad;
+}
+
+// convenience accessors
+
+- (void)setXAlignment:(float)_xAlign {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  
+  gtk_misc_set_alignment((GtkMisc *)gtkObject,
+                         _xAlign,
+                         ((GtkMisc *)gtkObject)->yalign);
+}
+- (void)setYAlignment:(float)_yAlign {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  
+  gtk_misc_set_alignment((GtkMisc *)gtkObject,
+                         ((GtkMisc *)gtkObject)->xalign,
+                         _yAlign);
+}
+- (float)xAlignment {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  return ((GtkMisc *)gtkObject)->xalign;
+}
+- (float)yAlignment {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  return ((GtkMisc *)gtkObject)->yalign;
 }
 
 // private
@@ -54,6 +87,22 @@
 }
 + (guint)typeIdentifier {
   return gtk_misc_get_type();
+}
+
+// description
+
+- (NSString *)alignDescription {
+  return [NSString stringWithFormat:@"alignment=[x=%f,y=%f]",
+                     [self xAlignment], [self yAlignment]];
+}
+
+- (NSString *)description {
+  return [NSString stringWithFormat:
+                     @"<%s[0x%08X] %@ %@>",
+                     [[self class] name], gtkObject,
+                     [self frameDescription],
+                     [self alignDescription]
+                   ];
 }
 
 @end

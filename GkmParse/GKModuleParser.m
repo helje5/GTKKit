@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModuleParser.m,v 1.19 1998/08/10 01:42:16 helge Exp $
+// $Id: GKModuleParser.m,v 1.20 1998/08/15 14:51:47 helge Exp $
 
 #include <stdio.h>
 #include "pcctscfg.h"
@@ -303,7 +303,7 @@ static inline void popParser(GKModuleParser *_parser) {
 - (void)setElementName:(NSString *)_name {
   // NSLog(@"  => element name %@", _name);
 
-  if (elementType == GKM_Object)
+  if (elementType == GKM_Reference)
     [self pushObject:[module objectForName:_name]];
   else
     [module registerObject:[self currentObject] withName:_name];
@@ -353,6 +353,16 @@ static inline void popParser(GKModuleParser *_parser) {
   }
   else
     [setInvocation invoke];
+}
+
+- (void)beginReferenceElement {
+  elementType = GKM_Reference;
+}
+- (void)endReferenceElement {
+  id obj = [self popObject];
+  if (!assignedName) {
+    NSLog(@"ERROR: no name was assigned to the reference !");
+  }
 }
 
 - (void)beginObjectElement {

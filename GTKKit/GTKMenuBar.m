@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKMenuBar.m,v 1.2 1998/07/10 10:57:43 helge Exp $
+// $Id: GTKMenuBar.m,v 1.4 1998/08/16 13:59:09 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKMenuBar.h"
 
 @implementation GTKMenuBar
@@ -38,23 +38,22 @@
 
 // modifying
 
-- (void)appendWidget:(GTKWidget *)_entry {
-  gtk_menu_bar_append((GtkMenuBar *)gtkObject,
-                      [_entry gtkWidget]);
-  [self _primaryAddSubWidget:_entry];
-}
+- (void)addSubWidget:(GTKWidget *)_widget {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_widget,           @"sub widget is nil");
 
-- (void)prependWidget:(GTKWidget *)_entry {
-  gtk_menu_bar_prepend((GtkMenuBar *)gtkObject,
-                       [_entry gtkWidget]);
-  [self _primaryInsertSubWidget:_entry atIndex:0];
+  gtk_menu_bar_append((GtkMenuBar *)gtkObject, [_widget gtkWidget]);
+  [self _primaryAddSubWidget:_widget];
 }
+- (void)addSubWidget:(GTKWidget *)_widget atIndex:(int)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_widget,           @"sub widget is nil");
 
-- (void)insertWidget:(GTKWidget *)_entry atIndex:(gint)_idx {
-  gtk_menu_bar_insert((GtkMenuBar *)gtkObject,
-                      [_entry gtkWidget],
-                      _idx);
-  [self _primaryInsertSubWidget:_entry atIndex:_idx];
+  if (_idx == 0)
+    gtk_menu_bar_prepend((GtkMenuBar *)gtkObject, [_widget gtkWidget]);
+  else
+    gtk_menu_bar_insert((GtkMenuBar *)gtkObject, [_widget gtkWidget], _idx);
+  [self _primaryInsertSubWidget:_widget atIndex:_idx];
 }
 
 // private

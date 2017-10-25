@@ -22,9 +22,9 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKPaned.m,v 1.2 1998/08/09 14:31:49 helge Exp $
+// $Id: GTKPaned.m,v 1.3 1998/08/16 13:59:12 helge Exp $
 
-#import "GTKKit.h"
+#import "common.h"
 #import "GTKPaned.h"
 
 @implementation GTKPaned
