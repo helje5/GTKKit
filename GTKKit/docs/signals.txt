@@ -1,0 +1,39 @@
+# $Id: signals.txt,v 1.1 1998/07/11 21:09:53 helge Exp $
+
+GTKKit signal handling
+
+Signal handling in GTKKit works by mapping signal-ids to Objective-C selectors. The
+signal-ids are like selectors unique identifiers, but there are not only unique for
+the name of the signal but also for the type. Because of this the signal handling
+depends on the gtk-typing information.
+
+The gtk-typing information is available through class methods in the GTKObject base
+class. All classes which wrap an gtk widget have to override some of these methods
+to provide proper typing information. The most important method is:
+
+  + (guint)typeIdentifier;
+
+This methods returns the type of the widget that the class wraps. You can then
+lookup signal identifiers and names by using the methods
+
+  + (gint)gtkSignalLookup:(NSString *)_name;
+  + (NSString *)gtkSignalName:(gint)_signal;
+
+The gtkSignalLookup: method depends on typeIdentifier, gtkSignalName: doesn't need
+typing, since the type is part of the signal identifier.
+
+You can map methods of your wrapper class as handlers to methods. Use one of these
+methods in +initialize of your wrapper to define the mapping:
+
+  + (void)mapSignal:(gint)_signal toSelector:(SEL)_selector;
+  + (void)mapSignalWithName:(NSString *)_signal toSelector:(SEL)_selector;
+
+afterwards you can retrieve the mapping using
+
+  + (SEL)selectorForSignal:(gint)_signal;
+
+This is done in the main event handler.
+
+---
+Helge Hess
+07/11/98

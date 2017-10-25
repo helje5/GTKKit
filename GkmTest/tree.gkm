@@ -1,0 +1,80 @@
+<!--
+   tree.gkm
+
+   Copyright (C) 1998 Helge Hess.
+   All rights reserved.
+
+   Author: Helge Hess <helge@mdlink.de>
+
+   This file is part of GTKKit.
+
+   Permission to use, copy, modify, and distribute this software and its
+   documentation for any purpose and without fee is hereby granted, provided
+   that the above copyright notice appear in all copies and that both that
+   copyright notice and this permission notice appear in supporting
+   documentation.
+
+   We disclaim all warranties with regard to this software, including all
+   implied warranties of merchantability and fitness, in no event shall
+   we be liable for any special, indirect or consequential damages or any
+   damages whatsoever resulting from loss of use, data or profits, whether in
+   an action of contract, negligence or other tortious action, arising out of
+   or in connection with the use or performance of this software.
+ -->
+<!-- $Id: tree.gkm,v 1.1 1998/08/09 23:05:26 helge Exp $ -->
+
+<MODULE>
+
+  <!-- setup outlets in controller -->
+  <OBJECT ID=OWNER>
+    <ASSIGN drawLine=#drawLine/>
+    <ASSIGN viewLineMode=#viewLineMode/>
+    <ASSIGN woRootItem=#woRootItem/>
+  </OBJECT>
+
+  <!-- create tree mode selection window -->
+  <GTKWindow ID=win1 title="Tree Mode Selection Window" 
+             releasedWhenClosed=NO borderWidth=0>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+  
+      <!-- create upper box - selection box -->
+      <GTKVertBox spacing=5 isHomogeneous=NO borderWidth=5>
+        <GTKHorizBox spacing=5 isHomogeneous=NO>
+  
+          <!-- make selection mode frame -->
+          <GTKFrame title="Selection Mode">
+            <GTKVertBox spacing=0 isHomogeneous=NO>
+              <GTKRadioButton tag=0 target=#OWNER action=@changeSelectMode: GROUP=rg>
+                <GTKLabel title="SINGLE"/>
+              </GTKRadioButton>
+              <GTKRadioButton tag=1 target=#OWNER action=@changeSelectMode: GROUP=rg>
+                <GTKLabel title="BROWSE"/>
+              </GTKRadioButton>
+              <GTKRadioButton tag=2 target=#OWNER action=@changeSelectMode: GROUP=rg>
+                <GTKLabel title="MULTIPLE"/>
+              </GTKRadioButton>
+            </GTKVertBox>
+          </GTKFrame>
+
+          <!-- options mode frame -->
+          <GTKFrame title="Options">
+            <GTKVertBox spacing=0 isHomogeneous=NO>
+              <GTKCheckButton ID=drawLine state=YES>
+                <GTKLabel title="Draw line"/>
+              </GTKCheckButton>
+              <GTKCheckButton ID=viewLineMode state=YES>
+                <GTKLabel title="View Line mode"/>
+              </GTKCheckButton>
+              <GTKCheckButton ID=woRootItem state=NO>
+                <GTKLabel title="Without Root item"/>
+              </GTKCheckButton>
+            </GTKVertBox>
+          </GTKFrame>
+  
+        </GTKHorizBox>
+      </GTKVertBox>
+  
+    </GTKVertBox>
+  </GTKWindow>
+
+</MODULE>

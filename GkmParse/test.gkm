@@ -1,0 +1,91 @@
+<!-- $Id: test.gkm,v 1.2 1998/08/07 19:56:52 helge Exp $ -->
+
+<!--
+  This is a mockup of what may come.
+
+  The tag syntax is equal to XML:
+    All tags with content must be closed:    <tag> ... </tag>
+    All tags without content must be marked: <tag/>
+
+  Custom values of attributes are strings or numbers
+
+    "MeinWert", 5
+
+  There are some more special values:
+
+    YES, NO - boolean value
+    #id     - reference to object named 'id'
+    @sel    - an ObjC selector
+    [..]    - these are layout-'tags', like [Fixed x=10 y=10], [Box expand=NO]
+
+  The attribute names normally start lowercase, those starting in uppercase are
+  system-attributes handled by the parser, eg ID set's up a name mapping.
+
+  In general a tagged description of a gtk+ widget hierachy works quite fine, since
+  the widgets are responsible for the layout. This is much like HTML.
+-->
+
+<MODULE>
+
+  <!-- setup outlets in controller -->
+  <Object ID=OWNER>
+    <Assign drawLine=#drawLine/>
+    <Assign viewLineMode=#viewLineMode/>
+    <Assign woRootItem=#woRootItem/>
+  </Object>
+
+  <!-- create tree mode selection window -->
+  <GTKWindow ID=win1 title="Tree Mode Selection Window" 
+             releasedWhenClosed=NO borderWidth=0>
+    <GTKVerticalBox spacing=0 sameSize=NO>
+  
+      <!-- create upper box - selection box -->
+      <GTKVerticalBox spacing=5 sameSize=NO borderWidth=5>
+        <GTKHorizontalBox spacing=5 sameSize=NO>
+  
+          <!-- make selection mode frame -->
+          <GTKFrame title="Selection Mode">
+            <GTKVerticalBox spacing=0 sameSize=NO>
+              <GTKRadioButton ID=rb1 title="SINGLE"   tag=0 
+                              target=#OWNER action=@changeSelectMode:/>
+              <GTKRadioButton ID=rb2 title="BROWSE"   tag=1 addedTo=#rb1
+                              target=#OWNER action=@changeSelectMode:/>
+              <GTKRadioButton ID=rb3 title="MULTIPLE" tag=2 addedTo=#rb2
+                              target=#OWNER action=@changeSelectMode:/>
+            </GTKVerticalBox>
+          </GTKFrame>
+
+          <!-- options mode frame -->
+          <GTKFrame title="Options">
+            <GTKVerticalBox spacing=0 sameSize=NO>
+              <GTKCheckButton ID=drawLine     title="Draw line"         state=YES/>
+              <GTKCheckButton ID=viewLineMode title="View Line mode"    state=YES/>
+              <GTKCheckButton ID=woRootItem   title="Without Root item" state=NO/>
+            </GTKVerticalBox>
+          </GTKFrame>
+  
+        </GTKHorizontalBox>
+      </GTKVerticalBox>
+  
+    </GTKVerticalBox>
+  </GTKWindow>
+
+  <!-- create fixed buttons window -->
+  <GTKWindow ID=fixedButtons title="Fixed Buttons" releasedWhenClosed=NO borderWidth=0>
+    <GTKVerticalBox spacing=0 sameSize=NO>
+
+      <GTKFixed borderWidth=10>
+
+        <GTKButton ID=b1 title="button1" action=@toggleHideShow: target=#b2
+                   layout=[Fixed x=10 y=10] />
+        <GTKButton ID=b2 title="button2" action=@toggleHideShow: target=#b3
+                   layout=[Fixed x=30 y=30] />
+        <GTKButton ID=b3 title="button3" action=@toggleHideShow: target=#b1
+                   layout=[Fixed x=30 y=60] />
+
+      </GTKFixed>
+
+    </GTKVerticalBox>
+  </GTKWindow>
+
+</MODULE>

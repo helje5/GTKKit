@@ -1,0 +1,230 @@
+<!--
+   test.gkm
+
+   Copyright (C) 1998 Helge Hess.
+   All rights reserved.
+
+   Author: Helge Hess <helge@mdlink.de>
+
+   This file is part of GTKKit.
+
+   Permission to use, copy, modify, and distribute this software and its
+   documentation for any purpose and without fee is hereby granted, provided
+   that the above copyright notice appear in all copies and that both that
+   copyright notice and this permission notice appear in supporting
+   documentation.
+
+   We disclaim all warranties with regard to this software, including all
+   implied warranties of merchantability and fitness, in no event shall
+   we be liable for any special, indirect or consequential damages or any
+   damages whatsoever resulting from loss of use, data or profits, whether in
+   an action of contract, negligence or other tortious action, arising out of
+   or in connection with the use or performance of this software.
+ -->
+<!-- $Id: test.gkm,v 1.9 1998/08/10 01:58:53 helge Exp $ -->
+
+<!--
+  Some little XML like format to create GTKKit GUIs ..
+
+  The tag syntax is equal to XML:
+    All tags with content must be closed:    <tag> ... </tag>
+    All tags without content must be marked: <tag/>
+
+  Custom values of attributes are strings or numbers
+
+    "MeinWert", 5
+
+  There are some more special values:
+
+    YES, NO - boolean value
+    #id     - reference to object named 'id'
+    @sel    - an ObjC selector
+    [..]    - these are layout-'tags', like [Fixed x=10 y=10], [Box expand=NO]
+
+  The attribute names normally start lowercase, those starting in uppercase are
+  system-attributes handled by the parser, eg ID set's up a name mapping.
+
+  In general a tagged description of a gtk+ widget hierachy works quite fine, since
+  the widgets are responsible for the layout. This is much like HTML.
+
+  The attributes of the tags directly refer to set-methods of the widgets. The element
+  names are the widget class names. The ID attribute assigns a name to a widget, objects
+  which were registered using this can be referenced using the #-attribute values, like
+  #MyObject. Those references are resolved after the whole file is parsed, so you can
+  reference objects which come after the reference.
+  
+  A special attribute-value GROUP exists to support groups of objects. It's main
+  purpose is to serve radio-button groups. Every object which belongs to a group is
+  tagged by the GROUP attribute. All widgets with the same GROUP attribute go into the
+  same radio group. Those groupings are resolved after the whole file was parsed.
+
+  There is a special tag OBJECT which can be used to refer to objects which were
+  created outside the file. This is usually a controller object. Using the object
+  tag you can assign the controller references to widgets. This is roughly the same
+  as IB outlets. To assign a value to a property of the object use the ASSIGN tag.
+  You can also use the ASSIGN tag to assign properties to normal widgets, although
+  this is considered bad style.
+
+  With widgets you have POSITION and SIZE attributes. These take a value-pair in the
+  form [value1 value2], for POSITION [x y] and SIZE [width height].
+-->
+
+<MODULE>
+
+  <!-- setup outlets in main controller -->
+  <OBJECT ID=OWNER>
+    <ASSIGN menuWindow   = #menu/>
+    <ASSIGN buttons      = #buttons/>
+    <ASSIGN fixedButtons = #fixedButtons/>
+    <ASSIGN checkButtons = #checkButtons/>
+  </OBJECT>
+
+  <!-- the menu -->
+  <GTKWindow ID=menu title="ObjC gtk+ test" borderWidth=0 defaultWidget=#quitButton
+             POSITION=[140 120] SIZE=[200 300]>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+      <GTKScrolledWindow borderWidth=10 
+                         horizScrollbarPolicy=AUTOMATIC 
+                         vertScrollbarPolicy=AUTOMATIC>
+        <GTKVertBox spacing=0 isHomogeneous=NO>
+          <!-- menu buttons -->
+
+          <GTKButton target=#buttons action=@orderFront: layout=[Box expand=NO fill=NO]>
+            <GTKLabel title="buttons"/>
+          </GTKButton>
+
+          <GTKButton target=#checkButtons action=@orderFront: 
+                     layout=[Box expand=NO fill=NO]>
+            <GTKLabel title="check buttons"/>
+          </GTKButton>
+
+          <GTKButton target=#fixedButtons action=@orderFront: 
+                     layout=[Box expand=NO fill=NO]>
+            <GTKLabel title="fixed buttons"/>
+          </GTKButton>
+        </GTKVertBox>
+      </GTKScrolledWindow>
+
+      <GTKHorizSeparator layout=[Box expand=NO]/>
+
+      <GTKVertBox spacing=10 isHomogeneous=NO borderWidth=5 layout=[Box expand=NO]>
+        <GTKButton ID=quitButton layout=[Box expand=NO] 
+                   target=#APP action=@terminate:>
+          <GTKLabel title="quit"/>
+        </GTKButton>
+      </GTKVertBox>
+    </GTKVertBox>
+  </GTKWindow>
+
+  <!-- create buttons test window -->
+  <GTKWindow ID=buttons title="Buttons" releasedWhenClosed=NO borderWidth=0
+             defaultWidget=#bhide>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+      <GTKTable rowCount=3 columnCount=3 isHomogeneous=YES borderWidth=10
+                rowSpacings=5 columnSpacings=5>
+
+        <GTKButton ID=tb1 action=@toggleHideShow: target=#tb2
+                   layout=[Table left=0 top=0 right=1 bottom=1]>
+          <GTKLabel title="button 1"/>
+        </GTKButton>
+
+        <GTKButton ID=tb2 action=@toggleHideShow: target=#tb3
+                   layout=[Table left=1 top=1 right=2 bottom=2]>
+          <GTKLabel title="button 2"/>
+        </GTKButton>
+
+        <GTKButton ID=tb3 action=@toggleHideShow: target=#tb4
+                   layout=[Table left=2 top=2 right=3 bottom=3]>
+          <GTKLabel title="button 3"/>
+        </GTKButton>
+
+        <GTKButton ID=tb4 action=@toggleHideShow: target=#tb5
+                   layout=[Table left=0 top=2 right=1 bottom=3]>
+          <GTKLabel title="button 4"/>
+        </GTKButton>
+
+        <GTKButton ID=tb5 action=@toggleHideShow: target=#tb6
+                   layout=[Table left=2 top=0 right=3 bottom=1]>
+          <GTKLabel title="button 5"/>
+        </GTKButton>
+
+        <GTKButton ID=tb6 action=@toggleHideShow: target=#tb7
+                   layout=[Table left=1 top=2 right=2 bottom=3]>
+          <GTKLabel title="button 6"/>
+        </GTKButton>
+
+        <GTKButton ID=tb7 action=@toggleHideShow: target=#tb8
+                   layout=[Table left=1 top=0 right=2 bottom=1]>
+          <GTKLabel title="button 7"/>
+        </GTKButton>
+
+        <GTKButton ID=tb8 action=@toggleHideShow: target=#tb9
+                   layout=[Table left=2 top=1 right=3 bottom=2]>
+          <GTKLabel title="button 8"/>
+        </GTKButton>
+
+        <GTKButton ID=tb9 action=@toggleHideShow: target=#tb1
+                   layout=[Table left=0 top=1 right=1 bottom=2]>
+          <GTKLabel title="button 9"/>
+        </GTKButton>
+
+      </GTKTable>
+
+      <GTKHorizSeparator/>
+      <GTKVertBox spacing=10 isHomogeneous=NO borderWidth=10 layout=[Box expand=NO]>
+        <GTKButton ID=bhide target=#buttons action=@orderOut: layout=[Box expand=NO]>
+          <GTKLabel title="hide"/>
+        </GTKButton>
+      </GTKVertBox>
+    </GTKVertBox>
+  </GTKWindow>
+
+  <!-- create check buttons windows -->
+  <GTKWindow ID=checkButtons title="Check Buttons" releasedWhenClosed=NO borderWidth=0
+             defaultWidget=#cbhide>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+
+      <GTKVertBox spacing=10 isHomogeneous=NO borderWidth=10>
+        <GTKCheckButton><GTKLabel title="button1"/></GTKCheckButton>
+        <GTKCheckButton><GTKLabel title="button2"/></GTKCheckButton>
+        <GTKCheckButton><GTKLabel title="button3"/></GTKCheckButton>
+      </GTKVertBox>
+
+      <GTKHorizSeparator/>
+      <GTKVertBox spacing=10 isHomogeneous=NO borderWidth=10 layout=[Box expand=NO]>
+        <GTKButton ID=cbhide target=#checkButtons action=@orderOut: 
+                   layout=[Box expand=NO]>
+          <GTKLabel title="hide"/>
+        </GTKButton>
+      </GTKVertBox>
+    </GTKVertBox>
+  </GTKWindow>
+
+  <!-- create fixed buttons window -->
+  <GTKWindow ID=fixedButtons title="Fixed Buttons" releasedWhenClosed=NO borderWidth=0
+             defaultWidget=#fbhide>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+
+      <GTKFixed borderWidth=10>
+        <GTKButton ID=b1 action=@toggleHideShow: target=#b2 layout=[Fixed x=10 y=10]>
+          <GTKLabel title="button1"/>
+        </GTKButton>
+        <GTKButton ID=b2 action=@toggleHideShow: target=#b3 layout=[Fixed x=30 y=30]>
+          <GTKLabel title="button2"/>
+        </GTKButton>
+        <GTKButton ID=b3 action=@toggleHideShow: target=#b1 layout=[Fixed x=30 y=60]>
+          <GTKLabel title="button3"/>
+        </GTKButton>
+      </GTKFixed>
+
+      <GTKHorizSeparator/>
+      <GTKVertBox spacing=10 isHomogeneous=NO borderWidth=10 layout=[Box expand=NO]>
+        <GTKButton ID=fbhide target=#fixedButtons action=@orderOut: 
+                   layout=[Box expand=NO]>
+          <GTKLabel title="hide"/>
+        </GTKButton>
+      </GTKVertBox>
+    </GTKVertBox>
+  </GTKWindow>
+
+</MODULE>

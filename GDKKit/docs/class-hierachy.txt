@@ -1,0 +1,16 @@
+# $Id: class-hierachy.txt,v 1.4 1998/08/06 17:35:03 helge Exp $
+
+GDKKit
+
+Classes
+
+  NSObject
+    GDKColor
+    GDKColorMap
+    GDKDrawable
+      GDKPixmap
+      GDKWindow
+    GDKFont
+    GDKGfxContext
+    GDKScreen
+    GDKVisual

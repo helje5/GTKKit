@@ -1,0 +1,88 @@
+<!--
+   spin.gkm
+
+   Copyright (C) 1998 Helge Hess.
+   All rights reserved.
+
+   Author: Helge Hess <helge@mdlink.de>
+
+   This file is part of GTKKit.
+
+   Permission to use, copy, modify, and distribute this software and its
+   documentation for any purpose and without fee is hereby granted, provided
+   that the above copyright notice appear in all copies and that both that
+   copyright notice and this permission notice appear in supporting
+   documentation.
+
+   We disclaim all warranties with regard to this software, including all
+   implied warranties of merchantability and fitness, in no event shall
+   we be liable for any special, indirect or consequential damages or any
+   damages whatsoever resulting from loss of use, data or profits, whether in
+   an action of contract, negligence or other tortious action, arising out of
+   or in connection with the use or performance of this software.
+ -->
+<!-- $Id: spin.gkm,v 1.4 1998/08/10 02:24:08 helge Exp $ -->
+
+
+<MODULE>
+
+  <!-- setup outlets in spin button controller -->
+  <OBJECT ID=OWNER>
+    <ASSIGN window=#spin/>
+  </OBJECT>
+
+  <!-- create spinbutton test window -->
+  <GTKWindow ID=spin title="Spin Buttons" releasedWhenClosed=NO borderWidth=0
+             defaultWidget=#spinHide>
+    <GTKVertBox spacing=0 isHomogeneous=NO>
+      <GTKVertBox spacing=5 isHomogeneous=NO borderWidth=5>
+        <!-- not accelerated frame -->
+        <GTKFrame title="Not accelerated">
+          <GTKHorizBox spacing=5 isHomogeneous=NO borderWidth=5>
+            <GTKVertBox spacing=0 isHomogeneous=NO 
+                        layout=[Box padding=5 expand=YES fill=YES]>
+              <GTKLabel title="Day : " layout=[Box expand=NO]/> <!-- alignment 0:0.5-->
+              <GTKSpinButton minValue=1 maxValue=31 intValue=10 doesWrap=YES 
+                             layout=[Box expand=NO]/>
+            </GTKVertBox>
+
+            <GTKVertBox spacing=0 isHomogeneous=NO 
+                        layout=[Box padding=5 expand=YES fill=YES]>
+              <GTKLabel title="Month : " layout=[Box expand=NO]/>
+              <GTKSpinButton minValue=1 maxValue=12 intValue=8 doesWrap=YES 
+                             layout=[Box expand=NO]/>
+            </GTKVertBox>
+
+            <GTKVertBox spacing=0 isHomogeneous=NO 
+                        layout=[Box padding=5 expand=YES fill=YES]>
+              <GTKLabel title="Year : " layout=[Box expand=NO]/>
+              <GTKSpinButton minValue=0 maxValue=2100 intValue=1998 doesWrap=YES 
+                             SIZE=[55 0] layout=[Box expand=NO]/>
+            </GTKVertBox>
+          </GTKHorizBox>
+        </GTKFrame>
+
+        <!-- accelerated frame -->
+        <GTKFrame title="Accelerated">
+          <GTKVertBox spacing=0 isHomogeneous=NO borderWidth=5>
+            <GTKHorizBox spacing=0 isHomogeneous=NO layout=[Box padding=5 fill=YES]>
+              <GTKVertBox spacing=0 isHomogeneous=NO layout=[Box padding=5]>
+                <GTKLabel title="Value :" layout=[Box expand=NO]/>
+                <GTKSpinButton minValue=-10000 maxValue=10000 pageSize=100
+                               intValue=0 stepSize=0.5 layout=[Box expand=NO]/>
+              </GTKVertBox>
+            </GTKHorizBox>
+          </GTKVertBox>
+        </GTKFrame>
+      </GTKVertBox>
+
+      <GTKHorizSeparator/>
+      <GTKVertBox spacing=10 isHomogeneous=NO borderWidth=10 layout=[Box expand=NO]>
+        <GTKButton target=#spinHide action=@orderOut: layout=[Box expand=NO]>
+          <GTKLabel title="hide"/>
+        </GTKButton>
+      </GTKVertBox>
+    </GTKVertBox>
+  </GTKWindow>
+
+</MODULE>

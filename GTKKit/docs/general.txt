@@ -1,0 +1,48 @@
+# $Id: general.txt,v 1.3 1998/08/09 11:10:45 helge Exp $
+
+GTKKit Topics
+
+In GTKKit an Objective-C class can wrap at most one gtk+ widget. However there
+are GTKKit classes which do not directly map to a gtk+ widget, but inherit from
+a wrapper-class.
+All wrapper classes should inherit from GTKObject. GTKObject handles a
+reference to a gtk+ object and all those general things you can do with these
+objects, like connecting signals, setting data, handling signals and so on.
+
+Wrapper Creation sequence
+
+When a wrapper classed is initialized through an -init* method, a new instance
+of an gtk+ widget is created. This instance is stored in the gtkObject variable
+in GTKObject. Most wrapper classes access this variable directly.
+The wrapper class is responsible for creating the gtk+ widget, since it knows
+how to accomplish this task. In most cases it does this simply by calling one
+of those gtk_object_new() functions (like gtk_button_new()). Using the accessors
+methods you can modify the settings of the widget.
+Sometimes the wrapper class cannot store all settings before the widget is
+actually managed, therefore some wrapper classes cache the settings and apply
+them when the runLateInitialization is invoked. This happens automatically when 
+the widget object receives the 'realize' signal. Be sure to invoke widgetDidRealize
+on super if you override it in a subclass.
+
+Layout/Packing
+
+In gtk+ the information how a subwidget is layouted in it's parent widget is
+given to the container when the subwidget is added. This is different in GTKKit.
+The information about the layout is stored in an object of a subclass of 
+GTKLayoutInfo. Most container types have a corresponding GTKLayoutInfo subclass,
+namely GTKBoxLayoutInfo, GTKTableLayoutInfo and GTKFixedLayoutInfo.
+If you want to add a widget to a container, you first have to set it's layout and
+then there is a single method for all containers: addSubWidget: which adds the
+widget to the hierachy.
+
+Some special issues
+
+Some instance-variables of gtk+ widgets are valid only when the widget is visible !
+Therefore some things have to be cached in the wrapper and are applied when the
+widget is shown on screen. They should get synchronized each time the widget is
+added/removed from the hierachy.
+Need to have a look again on this.
+
+---
+Helge Hess
+08/09/98

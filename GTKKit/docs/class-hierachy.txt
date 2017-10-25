@@ -1,0 +1,81 @@
+# $Id: class-hierachy.txt,v 1.5 1998/08/04 13:28:50 helge Exp $
+
+GTKKit 
+
+Classes
+
+  NSObject
+    GTKApplication
+    GTKLayoutInfo
+      GTKBoxLayoutInfo
+      GTKFixedLayoutInfo
+      GTKTableLayoutInfo
+    GTKObject
+      GTKData
+        GTKAdjustment
+        GTKToolTips
+      GTKWidget
+        GTKContainer
+          GTKBox
+            GTKHorizBox
+            GTKVertBox
+              GTKGammaCurve
+              GTKColorSelection
+          GTKButton             < GTKControl >
+            GTKOptionMenu
+            GTKToggleButton
+              GTKCheckButton
+                GTKRadioButton
+          GTKFixed
+            GTKHandle
+          GTKList               < GTKControl >
+          GTKMenuShell
+            GTKMenu
+            GTKMenuBar
+          GTKPaned
+            GTKHorizPaned
+            GTKVertPaned
+          GTKScrolledWindow
+          GTKSingleContainer
+            GTKAlignment
+            GTKHandleBox
+            GTKItem
+              GTKListItem
+              GTKMenuItem       < GTKControl >
+              GTKTreeItem
+            GTKFrame
+            GTKWindow
+              GTKDialog
+              GTKFileSelection
+              GTKMenuWindow
+          GTKTable
+          GTKTableList
+          GTKToolbar
+          GTKTree
+        GTKEditable < GTKControl >
+          GTKEntry
+            GTKSpinButton
+        GTKMiscWidget
+          GTKLabel
+          GTKPixmap
+        GTKProgressBar
+        GTKRange
+          GTKScale
+            GTKHorizScale
+            GTKVertScale
+          GTKScrollbar
+            GTKHorizScrollbar
+            GTKVertScrollbar
+        GTKSeparator
+          GTKHorizSeparator
+          GTKVertSeparator
+    GTKTimer
+
+Protocols
+
+  GTKControl
+  GTKTableDataSource (informal)
+
+
+Helge Hess
+07/11/98

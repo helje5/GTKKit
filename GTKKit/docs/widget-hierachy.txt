@@ -1,0 +1,84 @@
+$Id: widget-hierachy.txt,v 1.1 1998/07/09 06:09:17 helge Exp $
+
+gtk+ 0.99.4 Widget Hierachy
+
+  GtkObject
+   +GtkData
+   | +GtkAdjustment
+   | `GtkTooltips
+   `GtkWidget
+     +GtkContainer
+     | +GtkBin
+     | | +GtkAlignment
+     | | +GtkEventBox
+     | | +GtkFrame
+     | | | `GtkAspectFrame
+     | | +GtkHandleBox
+     | | +GtkItem
+     | | | +GtkListItem
+     | | | +GtkMenuItem
+     | | | | `GtkCheckMenuItem
+     | | | |   `GtkRadioMenuItem
+     | | | `GtkTreeItem
+     | | +GtkViewport
+     | | `GtkWindow
+     | |   +GtkColorSelectionDialog
+     | |   +GtkDialog
+     | |   | `GtkInputDialog
+     | |   `GtkFileSelection
+     | +GtkBox
+     | | +GtkButtonBox
+     | | | +GtkHButtonBox
+     | | | `GtkVButtonBox
+     | | +GtkHBox
+     | | | +GtkCombo
+     | | | `GtkStatusbar
+     | | `GtkVBox
+     | |   +GtkColorSelection
+     | |   `GtkGammaCurve
+     | +GtkButton
+     | | +GtkOptionMenu
+     | | `GtkToggleButton
+     | |   `GtkCheckButton
+     | |     `GtkRadioButton
+     | +GtkCList
+     | +GtkFixed
+     | +GtkList
+     | +GtkMenuShell
+     | | +GtkMenuBar
+     | | `GtkMenu
+     | +GtkNotebook
+     | +GtkPaned
+     | | +GtkHPaned
+     | | `GtkVPaned
+     | +GtkScrolledWindow
+     | +GtkTable
+     | +GtkToolbar
+     | `GtkTree
+     +GtkDrawingArea
+     | `GtkCurve
+     +GtkEditable
+     | +GtkEntry
+     | | `GtkSpinButton
+     | `GtkText
+     +GtkMisc
+     | +GtkArrow
+     | +GtkImage
+     | +GtkLabel
+     | | `GtkTipsQuery
+     | `GtkPixmap
+     +GtkPreview
+     +GtkProgressBar
+     +GtkRange
+     | +GtkScale
+     | | +GtkHScale
+     | | `GtkVScale
+     | `GtkScrollbar
+     |   +GtkHScrollbar
+     |   `GtkVScrollbar
+     +GtkRuler
+     | +GtkHRuler
+     | `GtkVRuler
+     `GtkSeparator
+       +GtkHSeparator
+       `GtkVSeparator
