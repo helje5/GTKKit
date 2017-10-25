@@ -22,11 +22,11 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModule.h,v 1.10 1998/08/09 23:50:20 helge Exp $
+// $Id: GKModule.h,v 1.11 1998/08/16 19:17:33 helge Exp $
 
 #import <Foundation/NSObject.h>
 
-@class NSMutableDictionary, NSZone, NSInvocation, NSEnumerator;
+@class NSMutableDictionary, NSZone, NSInvocation, NSEnumerator, NSDictionary;
 @class GTKWidget, GTKContainer;
 
 @interface GKModule : NSObject
@@ -46,8 +46,8 @@
 
 // factory
 
-- (id)produceObjectForName:(NSString *)_tagName;
-- (id)produceFillLayoutWithValues:(NSDictionary *)_values;
+- (id)produceObjectForName:(NSString *)_tagName attributes:(NSDictionary *)_attrs;
+- (id)produceFixedLayoutWithValues:(NSDictionary *)_values;
 - (id)produceBoxLayoutWithValues:(NSDictionary *)_values;
 - (id)produceTableLayoutWithValues:(NSDictionary *)_values;
 

@@ -21,7 +21,7 @@
    an action of contract, negligence or other tortious action, arising out of
    or in connection with the use or performance of this software.
  -->
-<!-- $Id: test.gkm,v 1.12 1998/08/15 14:51:51 helge Exp $ -->
+<!-- $Id: test.gkm,v 1.14 1998/08/17 00:01:34 helge Exp $ -->
 
 <!--
   Some little XML like format to create GTKKit GUIs ..
@@ -79,6 +79,9 @@
     <ASSIGN checkButtons = #checkButtons/>
   </REFERENCE>
 
+  <TableDataSource ID=dataSource>
+  </TableDataSource>
+
   <GTKMenu ID=fileMenu>
     <GTKMenuItem><GTKLabel xAlignment=0 title="Open..."/>   </GTKMenuItem>
     <GTKMenuItem><GTKLabel xAlignment=0 title="Save"/>      </GTKMenuItem>
@@ -100,6 +103,9 @@
           <GTKLabel title="File"/>
         </GTKMenuItem>
       </GTKMenuBar>
+
+<GTKNotebook labels=( "Menu", "TableList" )>
+  <GTKVertBox spacing=0 isHomogeneous=NO>
 
       <GTKScrolledWindow borderWidth=10 
                          horizScrollbarPolicy=AUTOMATIC 
@@ -132,6 +138,15 @@
           <GTKLabel title="quit"/>
         </GTKButton>
       </GTKVertBox>
+
+  </GTKVertBox>
+  <GTKVertBox spacing=0 isHomogeneous=NO>
+    <GTKLabel title="Test"/>
+    <GTKTableList dataSource=#dataSource showsTitles=YES 
+                  titles=( "pid", "name", "cpu" )/>
+  </GTKVertBox>
+</GTKNotebook>
+
     </GTKVertBox>
   </GTKWindow>
 

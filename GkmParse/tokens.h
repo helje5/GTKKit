@@ -29,17 +29,22 @@
 #define ATTRVALUE_AUTOMATIC 25
 #define ATTRVALUE_ALWAYS 26
 #define BEGIN_LAYOUT 27
-#define TOK_ASSIGN 28
-#define STRING 29
-#define INTEGER 30
-#define FLOAT 31
-#define ID_REFERENCE 32
-#define SELECTOR 33
-#define IDENTIFIER 34
-#define END_LAYOUT 37
-#define LAYOUT_FIXED 38
-#define LAYOUT_BOX 39
-#define LAYOUT_TABLE 40
+#define TOK_LPAREN 28
+#define TOK_LBRACE 29
+#define TOK_ASSIGN 30
+#define STRING 31
+#define INTEGER 32
+#define FLOAT 33
+#define ID_REFERENCE 34
+#define SELECTOR 35
+#define IDENTIFIER 36
+#define END_LAYOUT 39
+#define LAYOUT_FIXED 40
+#define LAYOUT_BOX 41
+#define LAYOUT_TABLE 42
+#define TOK_RBRACE 45
+#define TOK_RPAREN 46
+#define TOK_COMMA 47
 
 #ifdef __USE_PROTOS
 void gkmodule(void);
@@ -78,7 +83,25 @@ extern void genericElement();
 #endif
 
 #ifdef __USE_PROTOS
-extern  id   attributeValue(void);
+extern  id   specialAttributeValues( NSString *a );
+#else
+extern  id   specialAttributeValues();
+#endif
+
+#ifdef __USE_PROTOS
+extern  id   compoundAttributeValues( NSString *a );
+#else
+extern  id   compoundAttributeValues();
+#endif
+
+#ifdef __USE_PROTOS
+extern  id   basicAttributeValues( NSString *a );
+#else
+extern  id   basicAttributeValues();
+#endif
+
+#ifdef __USE_PROTOS
+extern  id   attributeValue( NSString *a );
 #else
 extern  id   attributeValue();
 #endif
@@ -101,6 +124,36 @@ extern  id   layoutValue(void);
 extern  id   layoutValue();
 #endif
 
+#ifdef __USE_PROTOS
+extern  id   arrayProperty(void);
+#else
+extern  id   arrayProperty();
+#endif
+
+#ifdef __USE_PROTOS
+extern  id   dictinaryProperty(void);
+#else
+extern  id   dictinaryProperty();
+#endif
+
+#ifdef __USE_PROTOS
+extern  NSString *  stringProperty(void);
+#else
+extern  NSString *  stringProperty();
+#endif
+
+#ifdef __USE_PROTOS
+extern  id   property(void);
+#else
+extern  id   property();
+#endif
+
+#ifdef __USE_PROTOS
+extern  id   compoundProperty(void);
+#else
+extern  id   compoundProperty();
+#endif
+
 #endif
 extern SetWordType zzerr1[];
 extern SetWordType zzerr2[];
@@ -111,4 +164,13 @@ extern SetWordType zzerr5[];
 extern SetWordType zzerr6[];
 extern SetWordType zzerr7[];
 extern SetWordType zzerr8[];
+extern SetWordType zzerr9[];
 extern SetWordType setwd2[];
+extern SetWordType zzerr10[];
+extern SetWordType zzerr11[];
+extern SetWordType zzerr12[];
+extern SetWordType zzerr13[];
+extern SetWordType setwd3[];
+extern SetWordType zzerr14[];
+extern SetWordType zzerr15[];
+extern SetWordType setwd4[];

@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKTableList.h,v 1.1 1998/07/09 06:07:42 helge Exp $
+// $Id: GTKTableList.h,v 1.3 1998/08/16 20:29:20 helge Exp $
 
 #include <gtk/gtkclist.h>
 #import <GTKKit/GTKContainer.h>
@@ -46,6 +46,7 @@ extern NSString *GTKTableListSelectionDidChangeNotification;
 + (id)tableListWithTitles:(NSArray *)_titles;
 - (id)initWithWidth:(int)_columnCount;
 - (id)initWithTitles:(NSArray *)_titles;
+- (id)initWithPropertyList:(id)_propertyList; // extracts 'columnCount' key
 
 // accessors
 
@@ -81,6 +82,8 @@ extern NSString *GTKTableListSelectionDidChangeNotification;
 - (void)setTitle:(NSString *)_title ofColumn:(int)_idx;
 - (void)setWidth:(gint)_width ofColumn:(int)_idx;
 - (void)setJustification:(GtkJustification)_j ofColumn:(int)_idx;
+
+- (void)setTitles:(NSArray *)_titles;
 
 // rows
 

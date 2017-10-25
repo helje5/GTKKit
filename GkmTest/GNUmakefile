@@ -21,7 +21,7 @@
 #   an action of contract, negligence or other tortious action, arising out of
 #   or in connection with the use or performance of this software.
 #
-# $Id: GNUmakefile,v 1.4 1998/08/10 01:54:44 helge Exp $
+# $Id: GNUmakefile,v 1.5 1998/08/16 18:54:18 helge Exp $
 
 include $(GNUSTEP_SYSTEM_ROOT)/Makefiles/common.make
 
@@ -29,8 +29,9 @@ TOOL_NAME = test
 
 $(TOOL_NAME)_OBJC_FILES = \
 	test.m \
-	MainController.m \
-	SpinController.m \
+	MainController.m  \
+	SpinController.m  \
+	TableDataSource.m \
 	\
 	GTKWidget+LogHierachy.m \
 	GTKWidget+Toggle.m      \

@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModule.m,v 1.15 1998/08/16 14:58:12 helge Exp $
+// $Id: GKModule.m,v 1.19 1998/08/16 19:49:13 helge Exp $
 
 #include <ctype.h>
 #include <objc/objc-api.h>
@@ -30,6 +30,10 @@
 #import "GKModule.h"
 #import "GKModuleParser.h"
 #import "GKMAttribute.h"
+
+@interface NSObject(PropertListInit)
+- (id)initWithPropertyList:(id)_propList;
+@end
 
 @implementation GKModule
 
@@ -108,26 +112,59 @@
 
 // factory
 
-- (id)produceObjectForName:(NSString *)_tagName {
+- (id)produceObjectForName:(NSString *)_tagName attributes:(NSDictionary *)_attrs {
   Class c = NSClassFromString(_tagName);
   
   if (c) {
-    id obj = [[c allocWithZone:objectZone] init];
+    id obj = [c allocWithZone:objectZone];
 
     if (obj == nil) {
-      NSLog(@"WARNING: could not produce object for class '%s'", [c name]);
+      NSLog(@"WARNING(%s): could not allocate object of class '%s'",
+            __PRETTY_FUNCTION__, [c name]);
       return nil;
+    }
+
+    //NSLog(@"producing object of class %@ with attributes %@", _tagName, _attrs);
+
+    if ([c instancesRespondToSelector:@selector(initWithPropertyList:)]) {
+      obj = [obj initWithPropertyList:_attrs];
+    }
+    else {
+      NSEnumerator *keys          = [_attrs keyEnumerator];
+      NSString     *attributeName = nil;
+
+      obj = [obj init];
+
+      while ((attributeName = [keys nextObject])) {
+        NSInvocation *setInvocation = nil;
+        id           attributeValue = [_attrs objectForKey:attributeName];
+
+        //NSLog(@"setting property '%@' to '%@' in object 0x%08X<%s>",
+        //      attributeName, attributeValue, (unsigned)obj, [c name]);
+
+        setInvocation = [self invocationToSetValue:attributeValue
+                              forProperty:attributeName
+                              ofObject:obj];
+        if (setInvocation)
+          [setInvocation invoke];
+        else {
+          NSLog(@"ERROR(%s): could not set value for "
+                @"property %@ of object 0x%08X<%s>",
+                __PRETTY_FUNCTION__, attributeName, (unsigned)obj, [c name]);
+        }
+      }
     }
 
     return AUTORELEASE(obj);
   }
   else {
-    NSLog(@"ERROR: did not find class for tag name '%@'", _tagName);
+    NSLog(@"ERROR(%s): did not find class for tag name '%@'",
+          __PRETTY_FUNCTION__, _tagName);
     return nil;
   }
 }
 
-- (id)produceFillLayoutWithValues:(NSDictionary *)_values {
+- (id)produceFixedLayoutWithValues:(NSDictionary *)_values {
   int x = [[_values objectForKey:@"x"] intValue];
   int y = [[_values objectForKey:@"y"] intValue];
 

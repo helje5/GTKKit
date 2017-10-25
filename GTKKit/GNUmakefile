@@ -21,7 +21,7 @@
 #   an action of contract, negligence or other tortious action, arising out of
 #   or in connection with the use or performance of this software.
 #
-# $Id: GNUmakefile,v 1.14 1998/08/15 14:44:21 helge Exp $
+# $Id: GNUmakefile,v 1.15 1998/08/16 20:21:01 helge Exp $
 
 GNUSTEP_INSTALLATION_DIR = $(GNUSTEP_USER_ROOT)
 
@@ -37,6 +37,7 @@ PROTOCOLS = \
 CATEGORIES = \
 	NSObject+TakeValues \
 	NSArray+GList       \
+	GTKObject+Bean      \
 
 CLASSES = \
 	GTKAccelLabel       \

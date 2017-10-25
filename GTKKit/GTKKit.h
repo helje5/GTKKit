@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKKit.h,v 1.16 1998/08/15 14:44:22 helge Exp $
+// $Id: GTKKit.h,v 1.17 1998/08/16 20:21:02 helge Exp $
 
 // #import <Foundation/Foundation.h>
 
@@ -87,6 +87,7 @@
 #import <GTKKit/GTKWidget.h>
 #import <GTKKit/GTKWindow.h>
 
+#import <GTKKit/GTKObject+Bean.h>
 #import <GTKKit/NSObject+TakeValues.h>
 
 #define LINK_GTKKit \
@@ -155,5 +156,6 @@
     [GTKWindow          self]; \
     \
     __link_NSObjectTakeValues(); \
+    __link_GTKObject_Bean();     \
     __link_GTKKit(); \
   }

@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModuleParser.m,v 1.20 1998/08/15 14:51:47 helge Exp $
+// $Id: GKModuleParser.m,v 1.26 1998/08/16 20:01:19 helge Exp $
 
 #include <stdio.h>
 #include "pcctscfg.h"
@@ -111,8 +111,11 @@ static inline void popParser(GKModuleParser *_parser) {
 
 #if !LIB_FOUNDATION_BOEHM_GC
 - (void)dealloc {
-  RELEASE(delayedProperties); delayedProperties = nil;
-  RELEASE(radioGroups);       radioGroups       = nil;
+  RELEASE(attributeCache);     attributeCache     = nil;
+  RELEASE(delayedProperties);  delayedProperties  = nil;
+  RELEASE(radioGroups);        radioGroups        = nil;
+  RELEASE(assignedName);       assignedName       = nil;
+  RELEASE(assignedRadioGroup); assignedRadioGroup = nil;
   [super dealloc];
 }
 #endif
@@ -155,8 +158,9 @@ static inline void popParser(GKModuleParser *_parser) {
         ASSIGN(object, [module objectForName:name]);
 
         if (object == nil) {
-          NSLog(@"WARNING: did not find object for reference '%@' (in property of %@)",
-                name, [i target]);
+          NSLog(@"WARNING(%s): "
+                @"did not find object for reference '%@' (in property of %@)",
+                __PRETTY_FUNCTION__, name, [i target]);
         }
 
         [i setArgument:&object atIndex:2];
@@ -250,25 +254,26 @@ static inline void popParser(GKModuleParser *_parser) {
 - (void)leaveModule {
 }
 
-- (id)valueForStringAttribute:(GKMAttribute *)_attribute {
+- (id)valueForString:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return AUTORELEASE([[_attribute text] copy]);
 }
-- (id)valueForIntAttribute:(GKMAttribute *)_attribute {
+- (id)valueForInt:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return [NSNumber numberWithInt:[[_attribute text] intValue]];
 }
-- (id)valueForFloatAttribute:(GKMAttribute *)_attribute {
+- (id)valueForFloat:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return [NSNumber numberWithDouble:[[_attribute text] doubleValue]];
 }
 
-- (id)valueForReferenceAttribute:(GKMAttribute *)_attribute {
+- (id)valueForReference:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return AUTORELEASE(RETAIN(_attribute));
 }
-- (id)valueForSelectorAttribute:(GKMAttribute *)_attribute {
+
+- (id)valueForSelector:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   // return selector name, strip of leading '@'
   return [[_attribute text] substringFromIndex:1];
 }
 
-- (id)valueForBoolAttribute:(GKMAttribute *)_attribute {
+- (id)valueForBool:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return [NSNumber numberWithBool:[[[_attribute text] uppercaseString]
                                                 isEqualToString:@"YES"]];
 }
@@ -278,7 +283,7 @@ static inline void popParser(GKModuleParser *_parser) {
   GTKLayoutInfo *layoutInfo = nil;
 
   if ([layoutType isEqualToString:@"fixed"])
-    layoutInfo = [module produceFillLayoutWithValues:_values];
+    layoutInfo = [module produceFixedLayoutWithValues:_values];
   else if ([layoutType isEqualToString:@"box"])
     layoutInfo = [module produceBoxLayoutWithValues:_values];
   else if ([layoutType isEqualToString:@"table"])
@@ -291,10 +296,10 @@ static inline void popParser(GKModuleParser *_parser) {
   return AUTORELEASE(RETAIN(layoutInfo));
 }
 
-- (id)valueForAutomaticAttribute:(GKMAttribute *)_attribute {
+- (id)valueForAutomatic:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return [NSNumber numberWithInt:GTK_POLICY_AUTOMATIC];
 }
-- (id)valueForAlwaysAttribute:(GKMAttribute *)_attribute {
+- (id)valueForAlways:(GKMAttribute *)_attribute attribute:(NSString *)_name {
   return [NSNumber numberWithInt:GTK_POLICY_ALWAYS];
 }
 
@@ -306,53 +311,30 @@ static inline void popParser(GKModuleParser *_parser) {
   if (elementType == GKM_Reference)
     [self pushObject:[module objectForName:_name]];
   else
-    [module registerObject:[self currentObject] withName:_name];
-  assignedName = YES;
+    ; // names of generic elements are handled in startGenericElement
+
+  ASSIGN(assignedName, _name);
 }
 
 - (void)setElementRadioGroup:(NSString *)_group {
-  NSMutableArray *array = [radioGroups objectForKey:_group];
-
-  if (array == nil) {
-    array = [[NSMutableArray alloc] initWithCapacity:16];
-    [radioGroups setObject:array forKey:_group];
-    RELEASE(array);
-  }
-
-  [array addObject:[self currentObject]];
+  ASSIGN(assignedRadioGroup, _group);
 }
 
 - (void)setElementPosition:(int)_x:(int)_y {
-  [[self currentObject] setPosition:_x:_y];
+  self->assignedPosition = YES;
+  self->x = _x;
+  self->y = _y;
+  //  [[self currentObject] setPosition:_x:_y];
 }
 - (void)setElementSize:(int)_width:(int)_height {
-  [[self currentObject] setSize:_width:_height];
+  self->assignedSize = YES;
+  self->width  = _width;
+  self->height = _height;
+  //  [[self currentObject] setSize:_width:_height];
 }
 
 - (void)setValue:(id)_value forProperty:(GKMAttribute *)_name {
-  NSInvocation *setInvocation   = nil;
-  BOOL         lastWasReference = NO;
-
-  if ([_value isKindOfClass:[GKMAttribute class]]) {
-    lastWasReference = YES;
-    _value = [_value text];
-  }
-
-  setInvocation = [module invocationToSetValue:_value
-                          forProperty:[_name text]
-                          ofObject:[self currentObject]];
-  if (setInvocation == nil) {
-    NSLog(@"WARNING: could not set value for property %@ of object %@",
-          [_name text], [self currentObject]);
-    return;
-  }
-
-  if (lastWasReference) {
-    // NSLog(@"queued invocation for delayed execution ..");
-    [delayedProperties addObject:setInvocation];
-  }
-  else
-    [setInvocation invoke];
+  [self->attributeCache setObject:_value forKey:[_name text]];
 }
 
 - (void)beginReferenceElement {
@@ -360,7 +342,7 @@ static inline void popParser(GKModuleParser *_parser) {
 }
 - (void)endReferenceElement {
   id obj = [self popObject];
-  if (!assignedName) {
+  if (assignedName == nil) {
     NSLog(@"ERROR: no name was assigned to the reference !");
   }
 }
@@ -370,7 +352,7 @@ static inline void popParser(GKModuleParser *_parser) {
 }
 - (void)endObjectElement {
   id obj = [self popObject];
-  if (!assignedName) {
+  if (assignedName == nil) {
     NSLog(@"ERROR: no name was assigned to object !");
   }
 }
@@ -378,35 +360,162 @@ static inline void popParser(GKModuleParser *_parser) {
 - (void)applyAssignment:(GKMAttribute *)_name
   assign:(id)_value to:(GKMAttribute *)_property {
 
-  [self setValue:_value forProperty:_property];
+  NSInvocation *setInvocation   = nil;
+  BOOL         lastWasReference = NO;
+
+  if ([_value isKindOfClass:[GKMAttribute class]]) { // a '#name' style reference
+    _value = [_value text]; // get the target object's name
+    lastWasReference = YES;
+  }
+
+  //NSLog(@"%s: setting property '%@' to %@, delayed=%s", __PRETTY_FUNCTION__,
+  //      [_property text], _value, lastWasReference ? "YES" : "NO");
+
+  setInvocation = [module invocationToSetValue:_value
+                          forProperty:[_property text]
+                          ofObject:[self currentObject]];
+  if (setInvocation == nil) {
+    NSLog(@"ERROR(%s): could not set value for property %@ of object %@",
+          __PRETTY_FUNCTION__, [_property text], [self currentObject]);
+    return;
+  }
+
+  if (lastWasReference) {
+    //NSLog(@"%s: queued invocation for delayed execution ..", __PRETTY_FUNCTION__);
+    [delayedProperties addObject:setInvocation];
+  }
+  else
+    [setInvocation invoke];
+}
+
+- (NSDictionary *)_removeReferencesFromAttributes {
+  NSMutableDictionary *refAttributes = nil;
+  NSEnumerator   *keys = [self->attributeCache keyEnumerator];
+  NSString       *key  = nil;
+
+  refAttributes = [[NSMutableDictionary alloc] initWithCapacity:8];
+
+  while ((key = [keys nextObject])) {
+    id value = [self->attributeCache objectForKey:key];
+
+    if ([value isKindOfClass:[GKMAttribute class]]) // found reference (#myObject)
+      [refAttributes setObject:value forKey:key];
+  }
+  
+  keys = [refAttributes keyEnumerator];
+  while ((key = [keys nextObject])) {
+    id value = nil;
+
+    value = [[self->attributeCache objectForKey:key] text];
+    [refAttributes setObject:value forKey:key];
+    [self->attributeCache removeObjectForKey:key];
+  }
+  return refAttributes;
+}
+
+- (void)_delayedInvocationsForAttributes:(NSDictionary *)_attributes {
+  if ([_attributes count] == 0)
+    return;
+  else {
+    NSEnumerator *keys = [_attributes keyEnumerator];
+    NSString     *key  = nil;
+
+    while ((key = [keys nextObject])) {
+      NSInvocation *setInvocation   = nil;
+      id           value            = nil;
+
+      value = [_attributes objectForKey:key];
+
+      setInvocation = [module invocationToSetValue:value
+                              forProperty:key
+                              ofObject:[self currentObject]];
+      if (setInvocation == nil) {
+        NSLog(@"ERROR(%s): could not set value for property %@ of object %@",
+              __PRETTY_FUNCTION__, key, [self currentObject]);
+      }
+      else {
+        // NSLog(@"queued invocation for delayed execution ..");
+        [self->delayedProperties addObject:setInvocation];
+      }
+
+      setInvocation = nil;
+      value         = nil;
+    }
+  }
 }
 
 - (void)beginGenericElement:(GKMAttribute *)_name {
-  id parentElement = [self currentObject];
-  id element;
-
   // reset temporaries
-  assignedName = NO;
-  elementType  = GKM_Generic;
+  RELEASE(assignedName);       assignedName       = nil;
+  RELEASE(assignedRadioGroup); assignedRadioGroup = nil;
+  assignedSize     = NO;
+  assignedPosition = NO;
+  elementType      = GKM_Generic;
 
-  element = [module produceObjectForName:[_name text]];
-  [self pushObject:element];
+  // setup attribute cache
+  if (attributeCache == nil)
+    attributeCache = [[NSMutableDictionary alloc] initWithCapacity:16];
+  else
+    [attributeCache removeAllObjects];
 }
 
 - (void)startGenericElement:(GKMAttribute *)_name {
   // All attributes where read & assigned. Now add the widget to it's parent.
-  id parentObject = [self parentObject];
-  id object       = [self currentObject];
+  NSDictionary *refAttributes;
+  id           parentObject = [self currentObject];
+  id           object       = nil;
+
+  refAttributes = [self _removeReferencesFromAttributes];
+
+  object = [module produceObjectForName:[_name text]
+                   attributes:self->attributeCache];
+  [self pushObject:object];
+
+  // resolve reference attributes (needs currentObject ..)
+  [self _delayedInvocationsForAttributes:refAttributes];
+  refAttributes = nil;
+
+  // apply naming
+  if (assignedName) {
+    //NSLog(@"mapped object 0x%08X<%s> to %@",
+    //      (unsigned)object, [[object class] name], assignedName);
+    [module registerObject:object withName:assignedName];
+  }
+
+  // apply radio group
+  if (assignedRadioGroup) {
+    NSMutableArray *array = [radioGroups objectForKey:assignedRadioGroup];
+
+    if (array == nil) { // first entry for radio-group
+      array = [[NSMutableArray alloc] initWithCapacity:16];
+      [radioGroups setObject:array forKey:assignedRadioGroup];
+      RELEASE(array); // reference is stored in dictionary
+    }
+    [array addObject:object]; // add object to radiogroup
+  }
+
+  // apply position & sizing
+  if (self->assignedPosition)
+    [object setPosition:self->x:self->y];
+  if (self->assignedSize)
+    [object setSize:self->width:self->height];
+
+  // clear attribute cache & reset transients
+  [self->attributeCache removeAllObjects];
+  self->assignedSize     = NO;
+  self->assignedPosition = NO;
+  RELEASE(self->assignedRadioGroup); assignedRadioGroup = nil; // release group name
+  RELEASE(self->assignedName);       assignedName       = nil;
 
   //NSLog(@"start %selement %@", [self isTopLevel] ? "TopLevel-" : "",  _name);
 
+  // add to parent
   if (![self isTopLevel]) {
     if (object) {
       if ([parentObject isKindOfClass:[GTKContainer class]])
         [module addSubWidget:object toContainer:parentObject];
-      else {
+      else
         NSLog(@"ERROR: could not add element %@ to parent %@", object, parentObject);
-      }
     }
   }
 }

@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GKModuleParser.h,v 1.10 1998/08/15 14:51:46 helge Exp $
+// $Id: GKModuleParser.h,v 1.14 1998/08/16 20:01:19 helge Exp $
 
 #import <Foundation/NSObject.h>
 
@@ -43,9 +43,17 @@ typedef enum {
   id       objectStack[80];
   unsigned stackPtr;
 
-  BOOL           assignedName;
-  GKMElementType elementType;
+  // transients used during parsing of a start-tag
+  GKMElementType      elementType;         // is it an reference or an element ?
+  NSMutableDictionary *attributeCache;     // used during reading of first tag
+  NSString            *assignedName;       // the current element had an ID attribute
+  NSString            *assignedRadioGroup; // radio group of current element
+  BOOL                assignedSize;
+  BOOL                assignedPosition;
+  gfloat              x, y;
+  gfloat              width, height;
 
+  // delayed execution & resolution of radio groups & names
   NSMutableArray      *delayedProperties; // for name resolution
   NSMutableDictionary *radioGroups;
 }
@@ -62,15 +70,19 @@ typedef enum {
 - (void)enterModule;
 - (void)leaveModule;
 
-- (id)valueForStringAttribute:(GKMAttribute *)_attribute;
-- (id)valueForIntAttribute:(GKMAttribute *)_attribute;
-- (id)valueForFloatAttribute:(GKMAttribute *)_attribute;
-- (id)valueForReferenceAttribute:(GKMAttribute *)_attribute;
-- (id)valueForSelectorAttribute:(GKMAttribute *)_attribute;
-- (id)valueForBoolAttribute:(GKMAttribute *)_attribute;
+// attribute values
+
+- (id)valueForString:(GKMAttribute *)_attribute    attribute:(NSString *)_name;
+- (id)valueForInt:(GKMAttribute *)_attribute       attribute:(NSString *)_name;
+- (id)valueForFloat:(GKMAttribute *)_attribute     attribute:(NSString *)_name;
+- (id)valueForReference:(GKMAttribute *)_attribute attribute:(NSString *)_name;
+- (id)valueForSelector:(GKMAttribute *)_attribute  attribute:(NSString *)_name;
+- (id)valueForBool:(GKMAttribute *)_attribute      attribute:(NSString *)_name;
 - (id)valueForLayoutType:(NSString *)_type values:(NSDictionary *)_values;
-- (id)valueForAutomaticAttribute:(GKMAttribute *)_attribute;
-- (id)valueForAlwaysAttribute:(GKMAttribute *)_attribute;
+- (id)valueForAutomatic:(GKMAttribute *)_attribute attribute:(NSString *)_name;
+- (id)valueForAlways:(GKMAttribute *)_attribute    attribute:(NSString *)_name;
+
+// elements
 
 - (void)beginObjectElement;
 - (void)endObjectElement;
@@ -79,9 +91,9 @@ typedef enum {
 - (void)applyAssignment:(GKMAttribute *)_name
   assign:(id)_value to:(GKMAttribute *)_property;
 
-- (void)beginGenericElement:(GKMAttribute *)_name;
-- (void)startGenericElement:(GKMAttribute *)_name;
-- (void)endGenericElement:(GKMAttribute *)_name;
+- (void)beginGenericElement:(GKMAttribute *)_name; // called before attributes
+- (void)startGenericElement:(GKMAttribute *)_name; // called after attributes
+- (void)endGenericElement:(GKMAttribute *)_name;   // called after end-tag
 - (void)beginGenericElementContent:(GKMAttribute *)_name;
 - (void)endGenericElementContent:(GKMAttribute *)_name;
 

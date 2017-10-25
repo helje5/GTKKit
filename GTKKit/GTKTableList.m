@@ -22,11 +22,12 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKTableList.m,v 1.5 1998/08/05 19:08:59 helge Exp $
+// $Id: GTKTableList.m,v 1.10 1998/08/16 20:50:27 helge Exp $
 
 #import "common.h"
 #import "GTKTableList.h"
 #import "GTKTableDataSource.h"
+#import "GTKObject+Bean.h"
 
 
 NSString *GTKTableListColumnDidMoveNotification =
@@ -76,6 +77,39 @@ NSString *GTKTableListSelectionDidChangeNotification =
          cnt, (char *)[[_titles objectAtIndex:cnt] cString]);
     }
   }
+  return self;
+}
+
+- (id)initWithPropertyList:(id)_propertyList {
+  // extracts 'columnCount' key
+  id colCount = nil;
+  id titles   = nil;
+  
+  NSAssert([_propertyList isKindOfClass:[NSDictionary class]],
+           @"invalid property list, need a dictionary");
+
+  colCount = [_propertyList objectForKey:@"columnCount"];
+  titles   = RETAIN([_propertyList objectForKey:@"titles"]);
+
+  if (titles != nil) {
+    if ([titles count] > [colCount intValue])
+      colCount = [NSNumber numberWithInt:[titles count]];
+  }
+  if ([colCount intValue] <= 0)
+    colCount = [NSNumber numberWithInt:1];
+
+  self = [self initWithWidth:[colCount intValue]];
+  if (self) {
+    _propertyList = [_propertyList mutableCopy];
+    [_propertyList removeObjectForKey:@"titles"];
+    [_propertyList removeObjectForKey:@"columnCount"];
+    [self takeValuesFromDictionary:_propertyList];
+    
+    if (titles) [self setTitles:titles];
+
+    RELEASE(_propertyList); _propertyList = nil;
+  }
+  RELEASE(titles); titles = nil;
   return self;
 }
 
@@ -319,23 +353,38 @@ NSString *GTKTableListSelectionDidChangeNotification =
 // columns
 
 - (gint)numberOfColumns {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
   return ((GtkCList *)gtkObject)->columns;
 }
 
 - (void)setTitle:(NSString *)_title ofColumn:(int)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
   gtk_clist_set_column_title((GtkCList *)gtkObject,
                              _idx, (char *)[_title cString]);
 }
 - (void)setWidth:(gint)_width ofColumn:(int)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
   gtk_clist_set_column_width((GtkCList *)gtkObject, _idx, _width);
 }
 - (void)setJustification:(GtkJustification)_j ofColumn:(int)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
   gtk_clist_set_column_justification((GtkCList *)gtkObject, _idx, _j);
 }
 
 - (void)setTitle:(NSString *)_title andWidth:(gint)_width ofColumn:(int)_idx {
   [self setTitle:_title ofColumn:_idx];
   [self setWidth:_width ofColumn:_idx];
+}
+
+- (void)setTitles:(NSArray *)_titles {
+  int cnt, len = [_titles count];
+  NSAssert(gtkObject != NULL,                       @"gtk widget is null");
+  NSAssert([_titles isKindOfClass:[NSArray class]], @"titles must be an array");
+
+  for (cnt = 0; cnt < len; cnt++) {
+    gtk_clist_set_column_title((GtkCList *)gtkObject,
+                               cnt, (char *)[[_titles objectAtIndex:cnt] cString]);
+  }
 }
 
 // rows
@@ -413,12 +462,16 @@ NSString *GTKTableListSelectionDidChangeNotification =
           id value = nil;
 
           value = getMethod(dataSource,
-                          @selector(tableList:objectValueForTableColumn:row:),
+                            @selector(tableList:objectValueForTableColumn:row:),
                             self,
                             column,
                             row);
+
+          if (![value isKindOfClass:[NSString class]]) {
+            value = AUTORELEASE(RETAIN([value stringValue]));
+          }
           
-          objValues[column] = [[[value stringValue] retain] autorelease];
+          objValues[column] = value;
           strPtr[column]    = (char *)[objValues[column] cString];
         }
 

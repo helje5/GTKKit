@@ -22,25 +22,67 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKNotebook.m,v 1.4 1998/08/16 14:01:07 helge Exp $
+// $Id: GTKNotebook.m,v 1.9 1998/08/17 00:01:32 helge Exp $
 
 #import "common.h"
 #import "GTKNotebook.h"
 #import "GTKLabel.h"
+#import "GTKObject+Bean.h"
 
 @implementation GTKNotebook
 
 + (id)notebook {
   return [[[self alloc] init] autorelease];
 }
+
+- (id)initWithGtkObject:(GtkObject *)_object {
+  if ((self = [super initWithGtkObject:(GtkObject *)gtk_notebook_new()])) {
+    labels = [[NSMutableArray alloc] initWithCapacity:16];
+  }
+  return self;
+}
 - (id)init {
   return [self initWithGtkObject:(GtkObject *)gtk_notebook_new()];
 }
 
+- (id)initWithPropertyList:(id)_propertyList { // extracts 'labels' key
+  NSAssert([_propertyList isKindOfClass:[NSDictionary class]],
+           @"invalid property list, need a dictionary");
+  
+  if ((self = [self init])) {
+    id plabels = [_propertyList objectForKey:@"labels"];
+
+    if (plabels) {
+      int cnt, labelCount = [plabels count];
+      
+      NSAssert([plabels isKindOfClass:[NSArray class]],
+               @"invalid value of property 'labels', requires NSArray");
+      _propertyList = [_propertyList mutableCopy];
+      [_propertyList removeObjectForKey:@"labels"];
+      [self takeValuesFromDictionary:_propertyList];
+      RELEASE(_propertyList); _propertyList = nil;
+
+      for (cnt = 0; cnt < labelCount; cnt++) {
+        id label = [plabels objectAtIndex:cnt];
+
+        if ([label isKindOfClass:[GTKWidget class]])
+          [self->labels addObject:label];
+        else
+          [self->labels addObject:[GTKLabel labelWithTitle:label]];
+      }
+    }
+    else
+      [self takeValuesFromDictionary:_propertyList];
+  }
+  return self;
+}
+
+#if !LIB_FOUNDATION_BOEHM_GC
 - (void)dealloc {
-  [labels release]; labels = nil;
+  RELEASE(labels); labels = nil;
   [super dealloc];
 }
+#endif
 
 // properties
 
@@ -67,34 +109,56 @@
 
 // add pages
 
-- (void)appendPage:(GTKWidget *)_page withLabel:(GTKWidget *)_label {
+- (void)addPage:(GTKWidget *)_page label:(GTKWidget *)_label {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_page,             @"page widget is nil");
+
+  if ([self->labels count] <= [self->subWidgets count]) {
+    if (_label == nil) {
+      NSLog(@"WARNING(%s): label is nil for page %@", __PRETTY_FUNCTION__, _page);
+      _label = [GTKLabel labelWithTitle:[NSString stringWithFormat:@"Page %i",
+                                                    [self->labels count]]];
+    }
+  }
+  else {
+    if (_label == nil)
+      _label = [labels objectAtIndex:[self->subWidgets count]];
+  }
+  
   gtk_notebook_append_page((GtkNotebook *)gtkObject,
                            [_page  gtkWidget],
                            [_label gtkWidget]);
   
   [self _primaryAddSubWidget:_page];
-  if (labels == nil) labels = [[NSMutableArray alloc] initWithCapacity:8];
-  [labels addObject:_label];
+
+  if ([self->labels count] < [self->subWidgets count])
+    [labels addObject:_label];
+  else {
+    [labels replaceObjectAtIndex:([self->subWidgets count] - 1)
+            withObject:_label];
+  }
 }
-- (void)prependPage:(GTKWidget *)_page withLabel:(GTKWidget *)_label {
-  gtk_notebook_prepend_page((GtkNotebook *)gtkObject,
-                            [_page  gtkWidget],
-                            [_label gtkWidget]);
-  [self _primaryInsertSubWidget:_page atIndex:0];
-  if (labels == nil) labels = [[NSMutableArray alloc] initWithCapacity:8];
-  [labels insertObject:_label atIndex:0];
+- (void)addPage:(GTKWidget *)_page title:(NSString *)_title {
+  [self addPage:_page label:[GTKLabel labelWithTitle:_title]];
 }
-- (void)insertPage:(GTKWidget *)_page
-  withLabel:(GTKWidget *)_label
-  atIndex:(gint)_idx {
+
+- (void)insertPage:(GTKWidget *)_page label:(GTKWidget *)_label atIndex:(gint)_idx {
+  NSAssert(gtkObject != NULL, @"gtk widget is null");
+  NSAssert(_page,             @"page widget is nil");
+  NSAssert(_label,            @"label widget is nil");
   
   gtk_notebook_insert_page((GtkNotebook *)gtkObject,
                            [_page  gtkWidget],
                            [_label gtkWidget],
                            _idx);
+  
   [self _primaryInsertSubWidget:_page atIndex:_idx];
-  if (labels == nil) labels = [[NSMutableArray alloc] initWithCapacity:8];
   [labels insertObject:_label atIndex:_idx];
+}
+- (void)insertPage:(GTKWidget *)_page title:(NSString *)_title atIndex:(gint)_idx {
+  [self insertPage:_page
+        label:[GTKLabel labelWithTitle:_title]
+        atIndex:_idx];
 }
 
 - (void)removePageAtIndex:(gint)_idx {
@@ -121,24 +185,10 @@
   return [subWidgets objectAtIndex:[self indexOfCurrentPage]];
 }
 
-- (void)appendPage:(GTKWidget *)_page withTitle:(NSString *)_title {
-  if (subWidgets == nil) subWidgets = [[NSMutableArray alloc] initWithCapacity:8];
-  if (labels == nil) labels = [[NSMutableArray alloc] initWithCapacity:8];
-  
-  [self appendPage:_page withLabel:[GTKLabel labelWithTitle:_title]];
-}
-- (void)prependPage:(GTKWidget *)_page withTitle:(NSString *)_title {
-  if (subWidgets == nil) subWidgets = [[NSMutableArray alloc] initWithCapacity:8];
-  if (labels == nil) labels = [[NSMutableArray alloc] initWithCapacity:8];
-  
-  [self prependPage:_page withLabel:[GTKLabel labelWithTitle:_title]];
-}
-
 // container support
 
 - (void)addSubWidget:(GTKWidget *)_widget {
-  [self appendPage:_widget
-        withTitle:[NSString stringWithFormat:@"Page %i", [subWidgets count] + 1]];
+  [self addPage:_widget label:nil];
 }
 - (void)removeSubWidget:(GTKWidget *)_widget {
   [self removePage:_widget];
@@ -173,6 +223,23 @@
 }
 - (gint16)tabBorder {
   return ((GtkNotebook *)gtkObject)->tab_border;
+}
+
+// description
+
+- (NSString *)description {
+  return [NSString stringWithFormat:
+                     @"<%s[0x%08X] %@ labels=%@ isScrollable=%s currentPage=%i "
+                     @"tabPosition=%i tabsAreVisible=%s showsBorder=%s>",
+                     [[self class] name], gtkObject,
+                     [self frameDescription],
+                     self->labels,
+                     [self isScrollable] ? "YES" : "NO",
+                     [self indexOfCurrentPage],
+                     [self tabPosition],
+                     [self tabsAreVisible] ? "YES" : "NO",
+                     [self doesShowBorder] ? "YES" : "NO"
+                   ];
 }
 
 @end

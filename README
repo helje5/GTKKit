@@ -1,11 +1,16 @@
-# $Id: README,v 1.15 1998/08/16 14:59:18 helge Exp $
+# $Id: README,v 1.18 1998/08/17 00:04:52 helge Exp $
 
-GTKKit-050898-release
+GTKKit-170898-release
 
 [News]
 
+08/17/1998: Did some tricks in GTKNotebook to make it accessible in gkm files.
 08/16/1998: Started Calculator, a very simple demo program to get people started.
             Fixed up include files in GTKKit.
+            Made description files support property lists as attribute values.
+            Cleaned up handling of attributes in GKMParseHandler.
+            Support for initWithPropertyList: method in GKModule (used in TableList)
+            GTKObject's became 'Beans' (they support initWithPropertyList:)
 08/15/1998: Made menus more GTKContainer like (fixed method names)
             Changed OBJECT tag to REFERENCE tag.
 08/10/1998: The description-language is getting running. In GkmParse and GkmTest

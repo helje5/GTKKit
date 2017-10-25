@@ -4,6 +4,10 @@
 #import "GKModuleParser.h"
 >>
 
+#lexaction<<
+static int propNesting = 0;
+>>
+
 <<
 extern GKModuleParser *activeParser;
 >>
@@ -45,7 +49,10 @@ extern GKModuleParser *activeParser;
 #token ATTRVALUE_AUTOMATIC  "AUTOMATIC"
 #token ATTRVALUE_ALWAYS     "ALWAYS"
 
-#token BEGIN_LAYOUT   "\["                    << zzmode(LAYOUT_TAG); >>
+#token BEGIN_LAYOUT         "\["              << zzmode(LAYOUT_TAG); >>
+
+#token TOK_LPAREN           "\("              << zzmode(PROPERTY); propNesting++; >>
+#token TOK_LBRACE           "\{"              << zzmode(PROPERTY); propNesting++; >>
 
 #token TOK_ASSIGN     "\="
 #token STRING         "\"~[\n\r\"]*\""
@@ -55,7 +62,7 @@ extern GKModuleParser *activeParser;
 #token SELECTOR       "\@[a-zA-Z][a-zA-Z0-9_\:]*"
 #token IDENTIFIER     "[a-zA-Z][a-zA-Z0-9_]*"
 #token "[\t\ ]+"                              << zzskip(); >>
-#token "[\n\r]"		                            << zzline++; zzskip(); >>
+#token "[\n\r]"		                      << zzline++; zzskip(); >>
 
 // *****************
 #lexclass LAYOUT_TAG
@@ -77,6 +84,23 @@ extern GKModuleParser *activeParser;
 #token IDENTIFIER     "[a-zA-Z][a-zA-Z0-9_]*"
 #token "[\t\ ]+"                              << zzskip(); >>
 #token "[\n\r]"	                              << zzline++; zzskip(); >>
+
+// *****************
+#lexclass PROPERTY
+
+#token TOK_RBRACE     "\}" << propNesting--; if (propNesting == 0) zzmode(TAG); >>
+#token TOK_RPAREN     "\)" << propNesting--; if (propNesting == 0) zzmode(TAG); >>
+
+#token TOK_LPAREN     "\(" << propNesting++; >>
+#token TOK_LBRACE     "\{" << propNesting++; >>
+
+#token TOK_ASSIGN     "\="
+#token TOK_COMMA      "\,"
+
+#token STRING         "\"~[\n\r\"]*\""
+#token IDENTIFIER     "[a-zA-Z][a-zA-Z0-9_]*"
+#token "[\t\ ]+"           << zzskip(); >>
+#token "[\n\r]"	           << zzline++; zzskip(); >>
 
 // *****************
 #lexclass COMMENT
@@ -113,7 +137,7 @@ assignElement
     at:BEGIN_ASSIGN_TAG
     i:IDENTIFIER 
     TOK_ASSIGN 
-    attributeValue > [value]
+    attributeValue[[$i text]] > [value]
     END_EMPTY_TAG
     << [activeParser applyAssignment:$at assign:value to:$i]; >>
   ;
@@ -148,17 +172,30 @@ genericElement
     << [activeParser endGenericElement:$bi]; >>
   ; 
 
-attributeValue > [id result]
-  : s:STRING        << $result = [activeParser valueForStringAttribute:$s];    >>
-  | i:INTEGER       << $result = [activeParser valueForIntAttribute:$i];       >>
-  | f:FLOAT         << $result = [activeParser valueForFloatAttribute:$f];     >>
-  | r:ID_REFERENCE  << $result = [activeParser valueForReferenceAttribute:$r]; >>
-  | e:SELECTOR      << $result = [activeParser valueForSelectorAttribute:$e];  >>
-  | n:ATTRVALUE_NO  << $result = [activeParser valueForBoolAttribute:$n];      >>
-  | y:ATTRVALUE_YES << $result = [activeParser valueForBoolAttribute:$y];      >>
-  | pa:ATTRVALUE_AUTOMATIC << $result = [activeParser valueForAutomaticAttribute:$pa];>>
-  | pl:ATTRVALUE_ALWAYS    << $result = [activeParser valueForAlwaysAttribute:$pl];>>
-  | layoutValue > [$result]
+specialAttributeValues[NSString *a] > [id r]
+  : pa:ATTRVALUE_AUTOMATIC << $r=[activeParser valueForAutomatic:$pa attribute:$a];>>
+  | pl:ATTRVALUE_ALWAYS    << $r=[activeParser valueForAlways:$pl    attribute:$a];>>
+  ;
+
+compoundAttributeValues[NSString *a] > [id result]
+  : layoutValue      > [$result]
+  | compoundProperty > [$result]
+  ;
+
+basicAttributeValues[NSString *a] > [id result]
+  : s:STRING        << $result = [activeParser valueForString:$s    attribute:$a]; >>
+  | i:INTEGER       << $result = [activeParser valueForInt:$i       attribute:$a]; >>
+  | f:FLOAT         << $result = [activeParser valueForFloat:$f     attribute:$a]; >>
+  | r:ID_REFERENCE  << $result = [activeParser valueForReference:$r attribute:$a]; >>
+  | e:SELECTOR      << $result = [activeParser valueForSelector:$e  attribute:$a]; >>
+  | n:ATTRVALUE_NO  << $result = [activeParser valueForBool:$n      attribute:$a]; >>
+  | y:ATTRVALUE_YES << $result = [activeParser valueForBool:$y      attribute:$a]; >>
+  ;
+
+attributeValue[NSString *a] > [id result]
+  : basicAttributeValues[$a]    > [$result]
+  | specialAttributeValues[$a]  > [$result]
+  | compoundAttributeValues[$a] > [$result]
   ;
 
 attributePair
@@ -178,14 +215,15 @@ attributePair
   | ATTRKEY_POSITION
     TOK_ASSIGN
     BEGIN_LAYOUT px:INTEGER py:INTEGER END_LAYOUT
-    << [activeParser setElementPosition:[[$px text] intValue]:[[$py text] intValue]]; >>
+    << [activeParser setElementPosition:
+                       [[$px text] intValue]:[[$py text] intValue]]; >>
   | ATTRKEY_SIZE
     TOK_ASSIGN
     BEGIN_LAYOUT pw:INTEGER ph:INTEGER END_LAYOUT
     << [activeParser setElementSize:[[$pw text] intValue]:[[$ph text] intValue]]; >>
   | pi:IDENTIFIER
     TOK_ASSIGN 
-    attributeValue > [value]
+    attributeValue[[$pi text]] > [value]
     << [activeParser setValue:value forProperty:$pi]; >>
   ;
 
@@ -217,4 +255,46 @@ layoutValue > [id result]
     )*
     END_LAYOUT
     << $result = [activeParser valueForLayoutType:layoutType values:al]; >>
+  ;
+
+// properties
+
+arrayProperty > [id array]
+  : << id obj = nil; >>
+    TOK_LPAREN 
+  ( TOK_RPAREN                  << $array = [NSArray array]; >>
+  | << $array = [NSMutableArray array]; >>
+    property > [obj]       << [$array addObject:obj]; >>
+    ( TOK_COMMA
+      property > [obj]     << [$array addObject:obj]; >>
+    )*
+    TOK_RPAREN
+  )
+  ;
+
+dictinaryProperty > [id dictionary]
+  : << id key = nil, value = nil; >>
+    TOK_LBRACE  << $dictionary = [NSMutableDictionary dictionary]; >>
+    (
+      stringProperty > [key]
+      TOK_ASSIGN
+      property       > [value]
+      << [$dictionary setObject:value forKey:key]; >>
+    )*
+    TOK_RBRACE
+  ;
+
+stringProperty > [NSString *string]
+  : i:IDENTIFIER << $string = AUTORELEASE([[$i text] copy]); >>
+  | s:STRING     << $string = AUTORELEASE([[$s text] copy]); >>
+  ;
+
+property > [id prop]
+  : stringProperty    > [$prop]
+  | compoundProperty  > [$prop]
+  ;
+
+compoundProperty > [id prop]
+  : arrayProperty     > [$prop]
+  | dictinaryProperty > [$prop]
   ;

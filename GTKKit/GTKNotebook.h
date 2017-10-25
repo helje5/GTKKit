@@ -22,7 +22,7 @@
    or in connection with the use or performance of this software.
 */
 
-// $Id: GTKNotebook.h,v 1.1 1998/07/09 06:07:33 helge Exp $
+// $Id: GTKNotebook.h,v 1.3 1998/08/16 23:46:48 helge Exp $
 
 #include <gtk/gtknotebook.h>
 #import <GTKKit/GTKContainer.h>
@@ -52,6 +52,7 @@
 
 + (id)notebook;
 - (id)init;
+- (id)initWithPropertyList:(id)_propertyList; // extracts 'labels' key
 
 // properties
 
@@ -66,10 +67,10 @@
 
 // pages
 
-- (void)appendPage:(GTKWidget *)_page  withLabel:(GTKWidget *)_label;
-- (void)prependPage:(GTKWidget *)_page withLabel:(GTKWidget *)_label;
-- (void)insertPage:(GTKWidget *)_page withLabel:(GTKWidget *)_label
-  atIndex:(gint)_idx;
+- (void)addPage:(GTKWidget *)_page    label:(GTKWidget *)_label;
+- (void)addPage:(GTKWidget *)_page    title:(NSString *)_title;
+- (void)insertPage:(GTKWidget *)_page label:(GTKWidget *)_label atIndex:(gint)_idx;
+- (void)insertPage:(GTKWidget *)_page title:(NSString *)_title atIndex:(gint)_idx;
 
 - (void)removePageAtIndex:(gint)_idx;
 - (void)removePage:(GTKWidget *)_page;
@@ -79,13 +80,11 @@
 - (gint)indexOfCurrentPage;
 - (GTKWidget *)currentPage;
 
-- (void)appendPage:(GTKWidget *)_page  withTitle:(NSString *)_title;
-- (void)prependPage:(GTKWidget *)_page withTitle:(NSString *)_title;
 
 // actions
 
-- (void)nextPage:sender;
-- (void)previousPage:sender;
+- (void)nextPage:(id)sender;
+- (void)previousPage:(id)sender;
 
 // private
 
